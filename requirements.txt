@@ -1,3 +1,5 @@
-
+django
+django-cleanup
+djangorestframework
 gunicorn
 django-heroku
