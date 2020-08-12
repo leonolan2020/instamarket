@@ -3,3 +3,4 @@ django-cleanup
 djangorestframework
 gunicorn
 django-heroku
+whitenoise
