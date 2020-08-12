@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = '&_u8x!0mhli^dt7mgr5pi7b+1@#m9=pw9wslp$-u*^&p%uh)=='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['leodashboard2.herokuapp.com','herokuapp.com','www.herokuapp.com']
 
 
 # Application definition
