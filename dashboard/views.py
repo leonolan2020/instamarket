@@ -4,7 +4,7 @@ from django.views import View
 def getContext(request,*args, **kwargs):
     context={}
     context['title']="Insta-Market"
-    context['message']="Hello to my home page !!"
+    context['message']="Hello! Welcome to my home page !!"
     return context
 class IndexView(View):
     def home(self, request, *args, **kwargs):
