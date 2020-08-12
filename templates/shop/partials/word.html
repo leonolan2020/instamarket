@@ -1,0 +1,78 @@
+{% load to_persian_date %}
+<div class="card card-stats">
+    <div class="card-header card-header-warning card-header-icon">
+     
+      
+      <p class="card-category" style="font-size: 0.75em !important;">
+   &nbsp;
+      </p><a href="{{word.get_absolute_url}}">
+      <h3 class="card-title text-primary">    {{word.name}}
+      
+      </h3></a>
+       <p class="text-warning my-0" style="font-size: 1em !important;">
+        <!-- <span class="text-muted">
+تلفظ &nbsp;: &nbsp;
+        </span> -->
+        {{word.pronounciation}}   
+      </p>
+
+
+      
+        {% if word.top_definition.definition %}
+            {{word.top_definition.with_links | safe }}   
+     
+        {% else %}
+          تعریفی وجود ندارد
+        {% endif %}
+        
+        
+
+    </div>
+    <div class="card-footer">
+      <div class="btn-group" role="group" aria-label="Basic example">
+       <form action="{% url 'data:add_like' %}" method="POST">
+         {% csrf_token %}
+         <input type="hidden" name="word_id" value="{{word.id}}">
+         <button type="submit" class="btn btn-success btn-sm">
+          <i class="material-icons">thumb_up</i>
+        </button>
+       </form> 
+        <button class="btn btn-secondary">
+          {{word.get_likes }}
+        </button>
+        <form action="{% url 'data:add_dislike' %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="word_id" value="{{word.id}}">
+          <button type="submit" class="btn btn-danger btn-sm">
+           <i class="material-icons">thumb_down</i>
+         </button>
+        </form> 
+     
+       
+      </div>
+      <div class="stats">
+   
+     
+   
+        <p class="card-category" >  
+   
+
+     
+          <a href="{{word.profile.get_absolute_url}}">
+
+            <img class="" height="24px" width="24px" style="border-radius: 50px;" src="{{word.profile.get_image}}"
+            alt="">
+          </a>
+
+
+    
+          <br>
+ <span style="font-size: 0.75em !important;">{{word.date_added | to_persian_date}}  
+          </span>    
+       
+
+
+        </p>
+      </div>
+    </div>
+  </div>

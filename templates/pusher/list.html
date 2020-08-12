@@ -1,0 +1,74 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% block contents %}
+
+
+
+
+
+<div class="row" id="manager-app">
+
+
+    <div class="col-lg-6 ">
+        <div class="card card-stats">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">content_copy</i>
+                </div>
+                <p class="card-category">ارسال پیام</p>
+                <h3 class="card-title">Pusher
+                    <small> Beam</small>
+                </h3>
+            </div>
+            <div class="card-body">
+          
+                {% for channel in channels %}
+                  <a href="{{channel.get_absolute_url}}">{{channel.channel_name}}</a>
+                {% endfor %}
+
+
+                
+                {% for channel_event in channel_events %}
+                  <a href="{{channel_event.get_absolute_url}}">{{channel_event.event_name}}</a>
+                {% endfor %}
+
+  {% for profile in profiles %}
+                  <a href="{{profile.get_absolute_url}}">{{profile.name}}</a>
+                {% endfor %}
+
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <i class="material-icons text-danger">warning</i>
+                    <a href="#pablo">فضای بیشتری داشته باشید...</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+  
+    
+
+
+    <div class="col-12">
+        <p>
+            {{message}}
+        </p>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+{% block scripts %}
+
+{% endblock %}
+{% block styles %}
+
+{% endblock %}

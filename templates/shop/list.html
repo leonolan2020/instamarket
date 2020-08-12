@@ -1,0 +1,299 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% block contents %}
+
+{% if breadcrumb %}
+
+
+
+<div class="card" style="line-height: 2.5em;">
+  {{breadcrumb | safe}}
+</div>
+{% endif %}
+<div class="row" id="shop-app">
+
+
+
+  {% if add_category_form  %}
+  <div class="col-md-3">
+    <div class="card card-stats">
+      <div class="card-header card-header-warning card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">content_copy</i>
+        </div>
+        <p class="card-category">{{parent.name}}</p>
+        <h3 class="card-title">دسته جدید
+        </h3>
+      </div>
+      <div class="card-body">
+        <form action="{% url 'shop:add_category'  %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" value="{{parent.id}}" name="parent_id">
+          <input type="text" name="name" placeholder="دسته جدید" required maxlength="50" class="form-control">
+          <button type="submit" class="btn btn-primary">افزودن</button>
+        </form>
+
+
+
+
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">local_offer</i>
+
+
+          {{categories|length}} دسته بندی
+
+
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+  {% endif %}
+
+  {% if add_product_form  %}
+
+  <div class="col-md-3">
+
+
+    <div class="card card-stats">
+      <div class="card-header card-header-danger card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">info_outline</i>
+        </div>
+        <p class="card-category">{{parent.name}}</p>
+        <h3 class="card-title">کالای جدید</h3>
+      </div>
+      <div class="card-body">
+
+        <form action="{% url 'shop:add_product' %}" method="POST">
+          {% csrf_token %}
+         
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="bmd-label-floating">واحد پیش فرض برای فروش</label>
+                <select name="unit_name" class="form-control">
+                  <option selected value="عدد">عدد</option>
+              
+                  
+{% for product_unit in unit_names %}
+  
+                  <option value="{{product_unit.name}}">{{product_unit.name}}</option>
+{% endfor %}
+
+                  
+                </select>
+
+              </div>
+            </div>
+
+          </div>
+
+          <input type="hidden" value="{{parent.id}}" name="category_id">
+          <input type="text" placeholder="کالای جدید" required maxlength="50" class="form-control" name="name">
+          <button type="submit" class="btn btn-primary">افزودن</button>
+        </form>
+
+
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">local_offer</i>
+
+          {{products|length}} کالا
+
+
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  {% endif %}
+
+  <div class="col-md-12">
+
+
+
+
+
+    {% if categories %}
+
+
+    <div class="card">
+
+
+
+      <div class="card-header card-header-primary">
+       {% if parent %}
+            <h4 class="card-title "><span style="vertical-align: middle;margin-left: 0.5em;margin-right: 0.5em;" ><i class="material-icons">{{parent.icon}}</i> </span>{{parent.name}}</h4>
+
+       {% else %}
+            <h4 class="card-title "><span style="vertical-align: middle;margin-left: 0.5em;margin-right: 0.5em;" ><i class="material-icons">home</i> </span>دسته بندی محصولات</h4>
+
+       {% endif %}
+       
+     
+        <!-- <p class="card-category"> برای ویرایش
+          <a href="#">اینجا</a>
+
+          را کلیک کنید
+        </p> -->
+      </div>
+
+
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <!-- <thead class=" text-primary">
+          
+              <th>
+                نام
+              </th>
+
+              <th>
+                &nbsp;
+              </th>
+            </thead> -->
+            <tbody>
+              {% for category in categories  %}
+
+
+              <tr>
+               
+                <td>
+                  <div class="row">
+                    <div class="col-lg"> <a class="text-primary" href="{{category.get_absolute_url}}">
+
+                        <h4> <i class="material-icons">{{category.icon}}</i>&nbsp;&nbsp;&nbsp;
+                          {{category.name}} <small><small class="text-info">
+                              ({{category.count}})</small></small></h4>
+
+                      </a></div>
+                    <div class="col-lg"> {% for product in category.top_products %}
+                      <small><a href="{{SITE_URL}}shop/product/{{product.id}}"> {{product.name}}</a>&nbsp;,&nbsp;
+                      </small> {% endfor %}...
+                    </div>
+                  </div>
+
+
+                </td>
+
+                <td>
+                  {% if can_edit_category %}
+                  <a class="btn btn-info" href="{{category.get_edit_url}}"> ویرایش</a>
+
+                  {% endif %}
+                </td>
+              </tr>
+
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if products %}
+
+    <div class="row">
+      {% for product in products %}
+
+      <div class="col-md-4">
+
+
+        <div class="card card-profile">
+          {% if product.image %}
+          <div class="card-avatar">
+            <a href="{{product.get_absolute_url}}">
+
+              <img src="{{ MEDIA_URL }}{{product.image}}" width="75px" style="border-radius: 75px;" alt="">
+
+            </a>
+          </div>
+          {% endif %}
+
+          <div class="card-header card-header-danger card-header-icon">
+            {% if not product.image %}
+            <div class="card-icon">
+              <i class="material-icons">info_outline</i>
+            </div>
+            {% endif %}
+
+
+
+            <a href="{{product.get_absolute_url}}">
+              <h3 class="card-title text-primary text-center">
+                {{product.name}}
+              </h3>
+            </a>
+          </div>
+          <div class="card-body">
+            {% if product.short_description %}
+            <p class="card-category">{{product.short_description}}</p>
+            {% endif %}
+
+
+            <p>
+              <a href="{{product.get_absolute_url}}">جزئیات</a>
+              &nbsp;&nbsp;|&nbsp;&nbsp;
+              <a href="{{product.get_edit_url}}">ویرایش</a>
+            </p>
+
+
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">local_offer</i>
+
+              {{product.name}}
+
+
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      {% endfor %}
+
+
+    </div>
+
+    {% endif %}
+  </div>
+
+
+
+</div>
+
+
+
+{% endblock %}
+{% block scripts %}
+<script>
+  $("#dashboard-shop-link").addClass("active");
+
+
+
+
+
+
+
+
+</script>
+{% endblock %}
+{% block styles %}
+<style>
+
+</style>
+{% endblock %}

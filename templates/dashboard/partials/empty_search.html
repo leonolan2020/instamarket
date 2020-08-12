@@ -1,0 +1,47 @@
+<div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="card card-stats">
+      <div class="card-header card-header-warning card-header-icon">
+
+        <p class="card-category" style="font-size: 0.75em !important;">
+          &nbsp;
+        </p><a href="{{word.get_absolute_url}}">
+          <h3 class="card-title text-primary"> برای جستجوی {{search_for}} نتیجه ای یافت نشد
+
+          </h3>
+        </a>
+        {% if new_word_form %}
+
+
+        <p class="text-muted my-0" style="font-size: 1em !important;">
+          اضافه می کنید؟
+        </p>
+        {% endif %}
+      </div>
+      <div class="card-footer">
+        {% if new_word_form %}
+
+
+        <form action="{% url 'web:index' %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="name" value="{{search_for}}">
+          <input type="hidden" name="pronounciation" value="-">
+          <input type="hidden" name="definition" value="-">
+<button type="submit" class="btn btn-primary" >بله</button>
+        </form> {% endif %}
+        <div class="stats">
+
+
+          <p class="card-category">
+
+
+     
+            
+           
+
+
+
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>

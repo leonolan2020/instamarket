@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+
+{% load static %}
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+	<!--     Fonts and icons     -->
+	<link rel="stylesheet" type="text/css" href="{% static 'dashboard/icons/css.css' %}" />
+	<link rel="stylesheet" href="{% static 'dashboard/icons/font-awesome.min.css' %} ">
+
+
+	<link rel="stylesheet" href="{% static 'dashboard/fonts/fontawesome-webfont.woff2' %} ">
+	<!-- Markazi Text font include just for persian demo purpose, don't include it in your project -->
+	<link href="{% static 'dashboard/icons/css2.css' %}" rel="stylesheet">
+
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="{% static 'dashboard/leo/bootstrap.min.css' %}">
+
+
+	<link rel="stylesheet" href="{% static 'dashboard/css/login.css' %}">
+	<link rel="stylesheet" href="{% static 'dashboard/leo/leo.css' %}">
+	<style>
+		[v-cloak] {
+			display: none;
+		}
+	</style>
+
+
+</head>
+<!--Coded with love by Mutiullah Samim-->
+
+<body>
+	<div class="container h-100">
+		<div class="d-flex justify-content-center h-100">
+			<div class="user_card" id="app" v-cloak>
+				<div class="d-flex justify-content-center">
+					<div class="brand_logo_container">
+						<a href="{% url 'dashboard:home' %}"><img src="{% static 'logo.svg' %}" class="brand_logo"
+								alt="Logo"></a>
+					</div>
+				</div>
+				<div v-if="show_login" class="d-flex justify-content-center form_container">
+					{% if login_form %}
+
+
+					<form action="{% url 'dashboard:auth' %}" method="POST">
+						{% csrf_token %}
+
+						{% if message %}
+						<div class="alert alert-danger" role="alert">
+							{{message}}
+						</div>
+						{% endif %}
+
+
+
+						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text"> <i class="material-icons">person</i></span>
+							</div>
+							<input type="text" name="username" required class="form-control input_user" value=""
+								placeholder="نام کاربری">
+						</div>
+						<div class="input-group mb-2">
+							<div class="input-group-append">
+								<span class="input-group-text"> <i class="material-icons">vpn_key</i></span>
+							</div>
+							<input type="password" name="password" required class="form-control input_pass" value=""
+								placeholder="کلمه عبور">
+						</div>
+						<div class="form-group">
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" id="customControlInline">
+								<label class="custom-control-label" for="customControlInline">مرا به خاطر بسپار</label>
+							</div>
+						</div>
+						<div class="d-flex justify-content-center mt-3 login_container">
+							<button type="submit" name="button" class="btn login_btn">ورود</button>
+						</div>
+					</form>
+					{% endif %} </div>
+
+
+				<div v-if="show_register" class="d-flex justify-content-center form_container">
+					{% if register_form %}
+
+
+					<form action="{% url 'dashboard:register' %}" method="POST">
+						{% csrf_token %}
+
+						<div class="input-group mb-2">
+							<div class="input-group-append">
+								<span class="input-group-text"> <i class="material-icons">person</i></span>
+							</div>
+							<select type="text" name="region_id" class="form-control">
+								<option disabled>شهر را انتخاب کنید</option>
+								{% for region in regions %}
+								<option value="{{region.id}}">{{region.name}}</option>
+								{% endfor %}
+							</select>
+
+						</div>
+
+						<div class="input-group mb-2">
+							<div class="input-group-append">
+								<span class="input-group-text"> <i class="material-icons">person</i></span>
+							</div>
+							<input v-model="username" @input="check_available_username" type="text" name="username"
+								class="form-control input_user" required value="" placeholder="نام کاربری">
+
+						</div>
+
+
+						<div v-if="already_exists">
+							<small id="emailHelp" class="form-text mb-2 text-danger"
+								style="direction: rtl;text-align: right;">نام کاربری تکراری می باشد.
+
+							</small>
+						</div>
+						<div class="input-group mb-2">
+							<div class="input-group-append">
+								<span class="input-group-text"> <i class="material-icons">vpn_key</i></span>
+							</div>
+							<input @input="check_validation" type="password" v-model="password" name="password" required
+								class="form-control input_pass" value="" placeholder="کلمه عبور">
+						</div>
+						<div v-if="password_length_error">
+							<small id="emailHelp" class="form-text mb-2 text-danger"
+								style="direction: rtl;text-align: right;">کلمه عبور (حداقل 8 حرف ) را وارد کنید.
+
+							</small>
+						</div>
+						<div class="input-group mb-4">
+							<div class="input-group-append">
+								<span class="input-group-text"> <i class="material-icons">vpn_key</i></span>
+							</div>
+							<input type="password" @input="check_validation" v-model="password2" name="password"
+								required class="form-control input_pass" value="" placeholder="تکرار کلمه عبور">
+						</div>
+						<div v-if="password_verify_error">
+							<small id="emailHelp" class="form-text mb-2 text-danger"
+								style="direction: rtl;text-align: right;">کلمه های عبور یکسان نمی باشد.
+
+							</small>
+						</div>
+
+						<div class="input-group mb-2">
+							<div class="input-group-append">
+								<span class="input-group-text"> <i class="material-icons">person</i></span>
+							</div>
+							<input type="text" @input="check_validation" required
+								style="direction: rtl;text-align: right;" name="first_name"
+								class="form-control input_user" v-model="first_name" placeholder="نام ">
+						</div>
+						<div v-if="first_name_error">
+							<small id="emailHelp" class="form-text mb-2 text-danger"
+								style="direction: rtl;text-align: right;">نام را وارد کنید.
+
+							</small>
+						</div>
+
+						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text"> <i class="material-icons">person</i></span>
+							</div>
+							<input type="text" @input="check_validation" required
+								style="direction: rtl;text-align: right;" name="last_name"
+								class="form-control input_user" v-model="last_name" placeholder="نام خانوادگی">
+						</div>
+
+						<div v-if="last_name_error">
+							<small id="emailHelp" class="form-text mb-2 text-danger"
+								style="direction: rtl;text-align: right;">نام خانوادگی را وارد کنید.
+
+							</small>
+						</div>
+						<div class="d-flex justify-content-center mt-3 login_container">
+							<button :disabled="valid === false" type="submit" name="button" class="btn login_btn">ثبت
+								نام</button>
+						</div>
+					</form>
+					{% endif %} </div>
+
+
+				<div v-if="show_reset" class="d-flex justify-content-center form_container">
+					{% if reset_password_form %}
+
+
+					<form action="{% url 'dashboard:reset_password' %}" method="POST">
+						{% csrf_token %}
+
+
+
+						<div class="input-group mb-2">
+							<div class="input-group-append">
+								<span class="input-group-text"> <i class="material-icons">vpn_key</i></span>
+							</div>
+							<input type="text" v-model="username" name="username" required
+								class="form-control input_pass" placeholder="نام کاربری">
+						</div>
+
+						<div class="input-group mb-2">
+							<div class="input-group-append">
+								<span class="input-group-text"> <i class="material-icons">vpn_key</i></span>
+							</div>
+							<input type="password" v-model="old_password" name="old_password" required
+								class="form-control input_pass" placeholder="کلمه عبور قبلی">
+						</div>
+
+						<div class="input-group mb-2">
+							<div class="input-group-append">
+								<span class="input-group-text"> <i class="material-icons">vpn_key</i></span>
+							</div>
+							<input type="password" v-model="new_password" name="new_password" required
+								class="form-control input_pass" value="" placeholder="کلمه عبور جدید">
+						</div>
+
+						<div v-if="password_length_error">
+							<small id="emailHelp" class="form-text mb-2 text-danger"
+								style="direction: rtl;text-align: right;">کلمه عبور (حداقل 8 حرف ) را وارد کنید.
+
+							</small>
+						</div>
+						<div class="input-group mb-4">
+							<div class="input-group-append">
+								<span class="input-group-text"> <i class="material-icons">vpn_key</i></span>
+							</div>
+							<input type="password" v-model="new_password2" name="new_password2" required
+								class="form-control input_pass" value="" placeholder="تکرار کلمه عبور">
+						</div>
+						<div v-if="password_verify_error">
+							<small id="emailHelp" class="form-text mb-2 text-danger"
+								style="direction: rtl;text-align: right;">کلمه های عبور یکسان نمی باشد.
+
+							</small>
+						</div>
+
+
+
+
+
+
+
+						<div class="d-flex justify-content-center mt-3 login_container">
+							<button type="submit" name="button" class="btn login_btn">کلمه عبور جدید
+							</button>
+						</div>
+					</form>
+					{% endif %}
+				</div>
+
+
+
+
+
+				<div v-if="show_login" class="mt-3">
+					<div class="d-flex justify-content-center links">
+						<p> نام کاربری ندارید ? <a href="#" @click="showRegister" class="ml-2 text-light">ثبت نام</a>
+						</p>
+					</div>
+					{% if reset_password_form %}
+
+
+					<div class="d-flex justify-content-center links">
+						<a href="#" @click="showReset" class="text-light">تغییردادن کلمه عبور </a>
+					</div>{% endif %}
+				</div>
+
+				<div v-if="show_reset" class="mt-3">
+					<div class="d-flex justify-content-center links">
+						<p> نام کاربری ندارید ? <a href="#" @click="showRegister" class="ml-2 text-light">ثبت نام</a>
+						</p>
+					</div>
+					<div class="d-flex justify-content-center links">
+						<a href="#" @click="showLogin" class="text-light">ورود</a>
+					</div>
+				</div>
+
+				<div v-if="show_register" class="mt-3">
+					<div class="d-flex justify-content-center links">
+						<p> قبلا ثبت نام کرده اید ? <a href="#" @click="showLogin" class="ml-2 text-light">ورود</a></p>
+					</div>
+					{% if reset_password_form %}
+
+
+					<div class="d-flex justify-content-center links">
+						<a href="#" @click="showReset" class="text-light">تغییردادن کلمه عبور </a>
+					</div>
+					{% endif %}
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="{% static 'dashboard/js/core/jquery.min.js' %}" type="text/javascript"></script>
+	<script src="{% static 'dashboard/js/core/popper.min.js' %}" type="text/javascript"></script>
+	<script src="{% static 'dashboard/js/core/bootstrap-material-design.min.js' %}" type="text/javascript"></script>
+	<script src="{% static 'dashboard/leo/vue.js' %}" type="text/javascript"></script>
+	<script>
+		var url_check_available_username = "{% url 'dashboard:check_available_username' %}";
+
+		function getCookie(name) {
+			let cookieValue = null;
+			if (document.cookie && document.cookie !== '') {
+				const cookies = document.cookie.split(';');
+				for (let i = 0; i < cookies.length; i++) {
+					const cookie = cookies[i].trim();
+					// Does this cookie string begin with the name we want?
+					if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						break;
+					}
+				}
+			}
+			return cookieValue;
+		}
+		const csrftoken = getCookie('csrftoken');
+	</script>
+
+
+	<script>
+		let app = new Vue({
+			el: "#app",
+			data: {
+				valid: false,
+				already_exists: false,
+				username: '',
+				password: '',
+				password2: '',
+				new_password: '',
+				new_password2: '',
+				old_password: '',
+				first_name: '',
+				last_name: '',
+				show_login: true,
+				show_register: false,
+				show_reset: false,
+				password_length_error: false,
+				password_verify_error: false,
+				first_name_error: false,
+				last_name_error: false,
+			},
+			methods: {
+				check_validation: function () {
+					this.password_length_error = false;
+					this.password_verify_error = false;
+					this.first_name_error = false;
+					this.last_name_error = false;
+					if (this.already_exists) { this.valid = false; this.already_exists = true; return false; }
+					else if (this.password.length < 8) { this.valid = false; this.password_length_error = true; return false; }
+					else if (this.password != this.password2) { this.valid = false; this.password_verify_error = true; return false; }
+					else if (this.first_name.length < 1) { this.valid = false; this.first_name_error = true; return false; }
+					else if (this.last_name.length < 1) { this.valid = false; this.last_name_error = true; return false; }
+					else this.valid = true;
+					// console.log('valid:' + this.valid)
+				},
+				check_available_username: function () {
+					// $.post(url_check_available_username, function () {
+					// 	console.log(this.username);
+					// });
+
+
+
+					username = this.username;
+					csrfmiddlewaretoken = csrftoken;
+					url = url_check_available_username;
+					// Send the data using post
+					var posting = $.post(url, { username: username, csrfmiddlewaretoken: csrfmiddlewaretoken });
+					// var posting = $.post(url, { message: message });
+
+					// Put the results in a div
+					posting.done(function (data) {
+						app.already_exists = (!data.available);
+						console.log(app.already_exists);
+						app.check_validation();
+					});
+
+
+				},
+				showLogin: function () {
+
+					this.show_login = true;
+					this.show_register = false;
+					this.show_reset = false;
+				},
+				showRegister: function () {
+					this.show_login = false;
+					this.show_register = true;
+					this.show_reset = false;
+				},
+				showReset: function () {
+					this.show_login = false;
+					this.show_reset = true;
+					this.show_register = false;
+				},
+			},
+			computed: {
+
+			},
+		});
+	</script>
+
+</body>
+
+</html>

@@ -1,0 +1,130 @@
+
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% block contents %}
+
+
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title ">فروش روزانه</h4>
+        <p class="card-category"> برای جستجو 
+          <a href="{% url 'shop:tables' %}">اینجا</a>
+          را کلیک کنید</p>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <thead class=" text-primary">
+              <th>
+                ID
+              </th>
+              <th>
+                نام
+              </th>
+              <th>
+                مبلغ
+              </th>
+              <th>
+                مانده
+              </th>
+              <th>
+                توضیحات
+              </th>
+            </thead>
+            <tbody>
+             {% for product in products %}
+               <tr>
+                <td>
+                    {{product.name}}
+                </td>
+                <td>
+                    {{product.name}}
+                </td>
+                <td>
+                    {{product.name}}
+                </td>
+                <td class="text-primary">
+                    {{product.name}}
+                </td>
+                <td>
+                &nbsp;
+                </td>
+              </tr> 
+             {% endfor %}
+             
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="card card-plain">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title mt-0"> Table on Plain Background</h4>
+        <p class="card-category"> Here is a subtitle for this table</p>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="">
+              <th>
+                ID
+              </th>
+              <th>
+                نام
+              </th>
+              <th>
+                مبلغ
+              </th>
+              <th>
+                مانده
+              </th>
+              <th>
+                توضیحات
+              </th>
+            </thead>
+            <tbody>
+              {% for product in products %}
+              <tr>
+               <td>
+                 {{product.id}}
+               </td>
+               <td>
+               {{product.name}}
+               </td>
+               <td>
+                 {{product.name}}
+               </td>
+               <td class="text-primary">
+                {{product.name}}
+               </td>
+               <td>
+               &nbsp;
+               </td>
+             </tr> 
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}
+{% block scripts %}
+<script>
+  $("#dashboard-shop-link").addClass("active");
+</script>
+{% endblock %}
+{% block styles %}
+{% endblock %}
+
+        

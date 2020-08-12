@@ -1,0 +1,330 @@
+{% load static %}
+<!--
+=========================================================
+ Material Dashboard - v2.1.2
+=========================================================
+
+ Product Page: https://www.creative-tim.com/product/material-dashboard
+ Copyright 2020 Creative Tim (https://www.creative-tim.com)
+ Licensed under MIT (https://github.com/creativetimofficial/material-dashboard/blob/master/LICENSE.md)
+
+ Coded by Creative Tim
+
+=========================================================
+
+ The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'dashboard/img/apple-icon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'dashboard/img/favicon.png' %}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        {{dashboard.subtitle.value}} " {{dashboard.title.value}} "
+    </title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+        name='viewport' />
+    <!-- Extra details for Live View on GitHub Pages -->
+    <!-- Canonical SEO -->
+
+    <link rel="canonical" href="https://www.creative-tim.com/product/material-dashboard" />
+
+    <!-- MetaData -->
+    {% for meta_data in dashboard.meta_data_items %}
+    <meta {{meta_data.key}}="{{meta_data.value}}" content="{{meta_data.content}}">
+    {% endfor %}
+
+    {% block head %}
+
+    {% endblock %}
+
+
+
+    <!--     Fonts and icons     -->
+    <link rel="stylesheet" type="text/css" href="{% static 'dashboard/icons/css.css' %}" />
+    <link rel="stylesheet" href="{% static 'dashboard/icons/font-awesome.min.css' %} ">
+
+
+    <link rel="stylesheet" href="{% static 'dashboard/fonts/fontawesome-webfont.woff2' %} ">
+    <!-- Markazi Text font include just for persian demo purpose, don't include it in your project -->
+    <link href="{% static 'dashboard/icons/css2.css' %}" rel="stylesheet">
+    <!-- CSS Files -->
+    <link href="{% static 'dashboard/css/material-dashboard.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'dashboard/css/material-dashboard-rtl.css' %}" rel="stylesheet" />
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link href="{% static 'dashboard/demo/demo.css' %}" rel="stylesheet" />
+    <link href="{% static 'dashboard/leo/leo.css' %}" rel="stylesheet" />
+    <!-- Google Tag Manager -->
+
+    <!-- End Google Tag Manager -->
+    <!-- Style Just for persian demo purpose, don't include it in your project -->
+    <style>
+        span.ct-label.ct-horizontal.ct-end {
+
+            direction: ltr !important;
+        }
+
+
+        span.ct-label.ct-vertical.ct-start {
+            margin-top: 1.5em;
+        }
+
+        div {
+            font-family: "HMFONT";
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+    {% block styles %}
+
+    {% endblock  %}
+</head>
+
+<body class="">
+    <!-- Extra details for Live View on GitHub Pages -->
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKDMSK6" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <div class="wrapper ">
+        <div class="sidebar" data-image="{% static 'dashboard/img/sidebar-11.jpg' %}"
+            style="background-color: #fff;box-shadow:none !important;" data-color="purple"
+            data-background-color="white">
+            <!--
+                put in to have image for sidebar
+    
+                -->
+            <!--
+        Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+
+        Tip 2: you can also add an image using data-image tag
+    -->
+
+
+
+            <div class="logo">
+                <div class="text-center">
+                    <a class="navbar-brand mx-0" href="{% url 'dashboard:home' %}" title="{{dashboard.title.value}}">
+                        <img width="48px" src="{% static 'logo.svg' %}" alt="">
+                    </a>
+
+                </div>
+
+                <a href="{{dashboard.url.value}}" class="simple-text logo-normal">
+
+                    <span class="text-secondary d-block text-center"
+                        style="font-size: 0.75em;">{{dashboard.subtitle.value}}</span>
+
+                    <span class="text-primary d-block text-center"
+                        style="font-size: 1.5em;">{{dashboard.title.value}}</span>
+
+                </a>
+            </div>
+            <div class="sidebar-wrapper">
+                <ul class="nav">
+                    {% include 'dashboard/partials/sidebar.html' %}
+                </ul>
+            </div>
+        </div>
+        <div class="main-panel">
+            {% include 'dashboard/partials/navbar.html' %}
+            <div class="content" style="padding-bottom: 0px;    min-height: calc(100vh - 220px);">
+                <div class="container-fluid">
+                    {% block contents %}
+
+                    {% endblock %}
+                </div>
+
+            </div>
+            <footer class="footer">
+                <div class="container-fluid">
+                    <nav class="mx-auto">
+                        <ul>
+                            <li>
+                                <a href="{% url 'dashboard:home' %}">
+                                    {{dashboard.title.value}}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'dashboard:about' %}">
+                                    درباره ما
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'dashboard:home' %}">
+                                    دشبورد
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'dashboard:terms' %}">
+                                    قوانین و مقررات
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="copyright text-center">
+                        &copy;
+                        <script>
+                            document.write(new Date().getFullYear())
+                        </script>, توسعه و طراحی
+                        توسط
+                        <a href="{{dashboard.our_team_link.value}}" target="_blank">
+                            {{dashboard.our_team_title.value}}
+                        </a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+
+
+        {% block modals %}
+
+        {% endblock %}
+
+        <!--   Core JS Files   -->
+        <script src="{% static 'dashboard/js/core/jquery.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'dashboard/js/core/popper.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'dashboard/js/core/bootstrap-material-design.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'dashboard/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
+        <!--  Google Maps Plugin    -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2Yno10-YTnLjjn_Vtk0V8cdcY5lC4plU"></script>
+        <!-- Place this tag in your head or just before your close body tag. -->
+        <script async defer src="https://buttons.github.io/buttons.js"></script>
+        <!-- Chartist JS -->
+        <script src="{% static 'dashboard/js/plugins/chartist.min.js' %}"></script>
+        <!--  Notifications Plugin    -->
+        <script src="{% static 'dashboard/js/plugins/bootstrap-notify.js' %}"></script>
+        <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+        <script src="{% static 'dashboard/js/material-dashboard.js' %}" type="text/javascript"></script>
+        <!-- Material Dashboard DEMO methods, don't include it in your project! -->
+        <script src="{% static 'dashboard/leo/vue.js' %}"></script>
+        <script>
+            var showNotification = function (from, align, icon, bgcolor, html) {
+                type = ['', 'info', 'danger', 'success', 'warning', 'rose', 'primary'];
+
+                color = Math.floor((Math.random() * 6) + 1);
+                color = 3;
+                $.notify({
+                    icon: icon,
+                    message: html
+
+                }, {
+                    type: bgcolor,
+                    timer: 3000,
+                    placement: {
+                        from: from,
+                        align: align
+                    }
+                });
+            }
+        </script>
+        {% block scripts %}
+
+        {% endblock %}
+
+
+
+        <script src="{% static 'pusher/pusher.min.js'%}"></script>
+        <script>
+            notifications = {{ notifications_s | safe }}
+            notifications_count = {{ notifications_count | safe }}
+
+
+            // Vue application
+            const app_notifications = new Vue({
+                el: '#app-notifications',
+                data: {
+                    notifications: notifications,
+                    notifications_count: notifications_count
+                },
+            });
+
+        </script>
+        {% if DEBUG %}
+          <script>
+              var logToConsole=true
+          </script>
+        {% else %}
+        
+        <script>
+        var logToConsole=false
+          </script>
+        {% endif %}
+        {% if user.is_authenticated and PUSHER_IS_ENABLE%}
+
+
+        <script>
+            my_channel_events ={{my_channel_events_s | safe}}
+
+
+            my_channel_events.forEach(my_channel_event => {
+
+
+                // Enable pusher logging - don't include this in production
+                Pusher.logToConsole =  logToConsole
+
+                var pusher = new Pusher(my_channel_event.channel.key, {
+                    cluster: my_channel_event.channel.cluster
+                })
+                    .subscribe(my_channel_event.channel.channel_name)
+                    .bind(my_channel_event.event_name, function (data) {
+                        app_notifications.notifications.reverse()
+                        app_notifications.notifications.push(data.message);
+                        app_notifications.notifications_count++
+                        app_notifications.notifications.reverse()
+                        // showNotification('bottom', 'center', 'chat', 'info', data.message)
+
+                        if (true || my_channel_event.channel.channel_name === 'NOTIFICATION') {
+                            let message = `
+                                <a href="${data.message.link}">
+                                <div>
+                                    <h4>${data.message.title}</h4>
+                                    <div>${data.message.body}</div>
+                                </div>
+                                </a>
+                            `
+                            if (data.message.get_absolute_url) {
+                                message = `
+                                <a href="${data.message.get_absolute_url}">
+                                    <div>
+                                        <h4>${data.message.title}</h4>
+                                        <div>${data.message.body}</div>
+                                    </div>
+                                </a>
+                            `
+                            }
+                            showNotification('bottom', 'center', data.message.icon, data.message.color,
+                                message)
+                        }
+
+
+                        try {
+                            Android.showToast(data.message);
+                        } catch (error) {
+                            if (Pusher.logToConsole)
+                                console.error(error);
+                            // console.log(error);
+                            // expected output: ReferenceError: nonExistentFunction is not defined
+                            // Note - error messages will vary depending on browser
+                        }
+
+                    });
+
+            });
+
+        </script>
+
+
+
+        {% endif %}
+
+</body>
+
+</html>

@@ -1,0 +1,141 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_rest_color %}
+{% load to_price %}
+{% load to_transaction_color %}
+{% load to_persian_date %}
+{% block contents %}
+
+
+
+<div class="row">
+    {% if transactions %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title ">تراکنش های مالی {{transaction_title}}</h4>
+                <p class="card-category"> لیست آخرین تراکنش های مالی کاربر در سامانه
+
+                    <br>
+                    مانده کل :
+                   <span class=""> {{ rest_all | to_price }}</span>
+                  </p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class=" text-primary">
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                عنوان
+                            </th>
+                            <th>
+                                بستانکار
+                            </th>
+                            <th>
+                                بدهکار
+                            </th>
+                            <th>
+                                تاریخ
+                            </th>
+                            <th>
+                                مبلغ
+                            </th>
+                            <th>
+                                مانده
+                            </th>
+
+
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions %}
+
+
+                            <tr>
+                                <td>
+                                    {{transaction.id}}
+                                </td>
+                                <td>
+                                    {% if transaction.order %}
+                                    <a href="{{transaction.order.get_absolute_url}}"> {{transaction.title}}</a>
+                                    {% else %}
+                                    {{transaction.title}}
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <a href="{{transaction.from_profile.get_absolute_url}}">
+                                        {{transaction.from_profile.name}}</a>
+
+                                </td>
+
+                                <td>
+                                    <a href="{{transaction.to_profile.get_absolute_url}}">
+                                        {{transaction.to_profile.name}}</a>
+
+                                </td>
+                                <td>
+                                    {{transaction.date_added | to_persian_date}}
+                                </td>
+                                <td class="{{transaction.direction | to_transaction_color}}">
+                                    {{transaction.amount | to_price}}
+                                  </td>
+
+                                <td class="{{transaction.rest | to_rest_color}}">
+                                    {{transaction.rest | to_price}}
+                                  </td>
+
+                               
+
+                            </tr> {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {% else %}
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-4">
+        <div id="app_profile" class="card card-profile">
+            <div class="card-avatar">
+                <a href="javascript:;">
+                    <img src="{% static 'logo.svg' %}" class="img">
+                </a></div>
+            <div class="card-body">
+                <h6 class="card-category text-gray text-center"></h6>
+                <h4 class="card-title text-center">هیچ تراکنشی برای شما ثبت نشده است</h4>
+
+
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+    {% endif %}
+
+
+
+</div>
+
+
+
+{% endblock %}
+{% block scripts %}
+<script>
+    $("#sidebar-transaction-link").addClass("active");
+</script>
+{% endblock %}
+{% block styles %}
+{% endblock %}

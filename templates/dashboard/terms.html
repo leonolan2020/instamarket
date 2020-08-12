@@ -1,0 +1,46 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% block contents %}
+
+
+
+<div class="row">
+
+  <div class="col-lg-12 col-md-12">
+    <div class="card card-profile">
+      <div class="card-avatar">
+        <a href="#pablo">
+          <img class="img" src="{% static 'logo.svg' %}" />
+        </a>
+      </div>
+      <div class="card-body">       
+        <h6 class="card-category text-gray">قوانین و مقررات استفاده از </h6>
+        <h4 class="card-title mb-4"><small>{{dashboard.subtitle.value}}</small> {{dashboard.title.value}}</h4>
+        <p class="card-description mb-4">
+       {{terms.value|safe}}
+        </p>
+        <a href="{{terms.get_edit_url}}" class="btn btn-primary btn-round">ویرایش</a>
+     
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+{% block scripts %}
+
+<script>
+  $("#dashboard-terms-link").addClass("active");
+
+
+
+
+
+</script>
+{% endblock %}
+{% block styles %}
+
+{% endblock %}

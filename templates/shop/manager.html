@@ -1,0 +1,209 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% block contents %}
+
+
+
+
+
+<div class="row" id="manager-app">
+  {% if send_pusher_beam_form %}
+
+  <div class="col-lg-6 ">
+    <div class="card card-stats">
+      <div class="card-header card-header-warning card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">content_copy</i>
+        </div>
+        <p class="card-category">ارسال پیام</p>
+        <h3 class="card-title">Pusher
+          <small> Beam</small>
+        </h3>
+      </div>
+      <div class="card-body">
+        <form action="{% url 'shop:send_beam' %}" method="POST">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group bmd-form-group is-filled">
+                <label class="bmd-label-floating">کلید</label>
+                <input name="interests" type="text" class="form-control" value="">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group bmd-form-group is-filled">
+                <label class="bmd-label-floating">عنوان</label>
+                <input name="title" type="text" class="form-control" value="">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group bmd-form-group is-filled">
+                <label class="bmd-label-floating">متن</label>
+                <input name="body" type="text" class="form-control" value="">
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary" type="submit">ارسال پیام</button>
+        </form>
+
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons text-danger">warning</i>
+          <a href="#pablo">فضای بیشتری داشته باشید...</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
+
+
+
+
+  {% if send_pusher_channel_form %}
+
+  <div class="col-lg-6 ">
+    <div class="card card-stats">
+      <div class="card-header card-header-warning card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">content_copy</i>
+        </div>
+        <p class="card-category">ارسال پیام</p>
+        <h3 class="card-title">Pusher
+          <small> Channel</small>
+        </h3>
+      </div>
+      <div class="card-body">
+        <!-- <form action="{% url 'shop:send_channel' %}" method="POST"> -->
+        <form>
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group bmd-form-group is-filled">
+                <label class="bmd-label-floating">کانال</label>
+                <input v-model="channel_name" name="channel_name" type="text" class="form-control" value="SUBMIT">
+              </div>
+            </div>
+
+
+            <div class="col-md-4">
+              <div class="form-group bmd-form-group is-filled">
+                <label class="bmd-label-floating">رویداد</label>
+                <input v-model="event_name" name="event_name" type="text" class="form-control" value="my-event">
+              </div>
+            </div>
+
+
+            <div class="col-md-4">
+              <div class="form-group bmd-form-group is-filled">
+                <label class="bmd-label-floating">عنوان</label>
+                <input v-model="title" name="title" type="text" class="form-control" value="">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group bmd-form-group is-filled">
+                <label class="bmd-label-floating">پیام</label>
+                <input v-model="message" name="message" type="text" class="form-control" value="">
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary" @click="sendChannel" type="button">ارسال پیام</button>
+        </form>
+
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons text-danger">warning</i>
+          <a href="#pablo">فضای بیشتری داشته باشید...</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
+
+
+  <div class="col-12">
+    <p>
+      {{message}}
+    </p>
+  </div>
+</div>
+
+
+
+
+{% endblock %}
+{% block scripts %}
+<script>
+
+
+let csrfmiddlewaretoken = ''
+  $(document).ready(function () {
+    // Javascript method's body can be found in assets/js/demos.js
+    csrfmiddlewaretoken = $("input[name='csrfmiddlewaretoken']").val()
+
+
+  });
+
+</script>
+<script>
+  $("#manager-link").addClass("active");
+  let manager_app = new Vue({
+    el: "#manager-app",
+    data: {
+      title: 'wwww',
+      message: 'ee  ff fdfds fsd ',
+      event_name: 'my-event',
+      channel_name: 'SUBMIT',
+    },
+    methods: {
+      sendChannel: function () {
+        
+        postSendChannel()
+      },
+      sendBeam: function () {
+
+      },
+    },
+
+  })
+  function postSendChannel() {
+    //console.log('postAddCategory')
+    let url = '{% url "shop:send_channel" %}'
+    // Send the data using post
+    // var getting = $.get(url);
+    let title = manager_app.title
+    let message = manager_app.message
+    let event_name = manager_app.event_name
+    let channel_name = manager_app.channel_name
+    var posting = $.post(url, {
+      title: title,
+      message: message,
+      event_name: event_name,
+      channel_name: channel_name,
+      csrfmiddlewaretoken: csrfmiddlewaretoken
+
+
+
+    })
+    posting.done(function (data) {
+      if (data.result==='SUCCESS')
+        showNotification('bottom', 'center', 'category', 'warning', ' پیام با موفقیت ارسال شد')
+
+
+    })
+
+  }
+
+
+
+
+
+</script>
+{% endblock %}
+{% block styles %}
+
+{% endblock %}

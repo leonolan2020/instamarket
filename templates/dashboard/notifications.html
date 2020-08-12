@@ -1,0 +1,159 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+{% block contents %}
+
+
+
+{% if notification %}
+<div class="row">
+
+  <div class="col-lg-3">
+
+  </div>
+
+  <div class="col-md-6">
+    <h4 class="card-title mb-3">
+    </h4>
+
+    <div class="alert alert-{{notification.color}} alert-with-icon" data-notify="container">
+      <i class="material-icons" data-notify="icon">{{notification.icon}}</i>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <i class="material-icons">close</i>
+      </button>
+      <span data-notify="message">
+        <h4 class="mb-0"> {{notification.title}}</h4>
+        <small>{{notification.date_added | to_persian_date}}</small>
+        <br>
+        {{notification.body|safe}}
+        <br>
+        <a class="btn btn-primary" href="{{notification.link}}">برو</a>
+      </span>
+    </div>
+
+
+  </div>
+  <div class="col-lg-3">
+
+  </div>
+
+  <div class="col-12 text-center mt-4">
+    <a class="btn btn-primary" href="{% url 'dashboard:notifications' %}">لیست همه اعلان ها</a>
+  </div>
+</div>
+{% endif %}
+
+
+
+
+{% if  notifications_unseen %}
+
+
+
+<div class="card">
+  <div class="card-header card-header-primary">
+    <h3 class="card-title">اعلان های دیده نشده</h3>
+    <p class="card-category"> برای
+
+      {{profile.name}}
+
+    </p>
+  </div>
+  <div class="card-body">
+    <div class="row">
+
+
+
+      {% for notification in notifications_unseen %}
+      <div class="col-12">
+        <h4 class="card-title mb-3">
+        </h4>
+        <a href="{{notification.get_absolute_url}}">
+          <div class="alert alert-{{notification.color}} alert-with-icon" data-notify="container">
+            <i class="material-icons" data-notify="icon">{{notification.icon}}</i>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <i class="material-icons">close</i>
+            </button>
+            <span data-notify="message">
+              <h4 class="mb-0"> {{notification.title}}</h4>
+              <small>{{notification.date_added | to_persian_date}}</small>
+
+            </span>
+          </div>
+        </a>
+
+      </div>
+      {% endfor %}
+
+
+
+
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+
+
+
+{% if  notifications_seen %}
+
+
+
+<div class="card">
+  <!-- <div class="card-header card-header-primary">
+    <h3 class="card-title">اعلان های دیده شده</h3>
+    <p class="card-category"> برای
+
+      {{profile.name}}
+
+    </p>
+  </div> -->
+  <div class="card-body">
+    <div class="row">
+
+
+
+      {% for notification in notifications_seen %}
+      <div class="col-12">
+        <h4 class="card-title mb-3">
+        </h4>
+        <a href="{{notification.get_absolute_url}}">
+          <div class="alert alert-secondary alert-with-icon" data-notify="container">
+            <i class="material-icons text-{{notification.color}}" data-notify="icon">{{notification.icon}}</i>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <i class="material-icons">close</i>
+            </button>
+            <span data-notify="message">
+              <h4 class="mb-0"> {{notification.title}}</h4>
+              <small>{{notification.date_added | to_persian_date}}</small>
+
+            </span>
+          </div>
+        </a>
+<hr>
+      </div>
+      {% endfor %}
+
+
+
+
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+{% endblock %}
+{% block scripts %}
+<script>
+  $("#dashboard-notifications-link").addClass("active");
+</script>
+
+
+
+{% endblock %}
+{% block styles %}
+{% endblock %}

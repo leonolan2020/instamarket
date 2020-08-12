@@ -1,0 +1,317 @@
+
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% load to_rest_color %}
+{% block contents %}
+
+
+
+<div class="row">
+  <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="card card-stats ">
+      <div class="card-header card-header-danger card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">get_app</i>
+        </div>
+        <p class="card-category">فایل excel</p>
+        <h3 class="card-title">دانلود گزارش</h3>
+      </div>
+      <div class="card-body">
+        <a href="{% url 'shop:xlsx' %}" class="btn btn-success">
+          <i class="material-icons">get_app</i>
+          دانلود فایل اکسل
+        </a>
+      </div>
+
+      <div class="card-footer">
+      
+        <div class="stats">
+          <i class="material-icons">local_offer</i> توسط گیت‌هاب
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-header card-header-danger card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">get_app</i>
+        </div>
+        <p class="card-category">فایل excel</p>
+        <h3 class="card-title">دانلود گزارش</h3>
+      </div>
+      <div class="card-body">
+        <a href="{% url 'shop:xlsx' %}" class="btn btn-success">
+          <i class="material-icons">get_app</i>
+          دانلود فایل اکسل
+        </a>
+      </div>
+
+      <div class="card-footer">
+      
+        <div class="stats">
+          <i class="material-icons">local_offer</i> توسط گیت‌هاب
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-header card-header-danger card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">get_app</i>
+        </div>
+        <p class="card-category">فروشگاه</p>
+        <h3 class="card-title">لیست فروشنده ها</h3>
+      </div>
+      <div class="card-body">
+        {% for supplier in suppliers %}
+        <a href="{{supplier.get_absolute_url}}" class="btn btn-success">
+          <i class="material-icons">get_app</i>
+          {{supplier.name}}
+        </a>
+        {% endfor %}
+        
+      </div>
+
+      <div class="card-footer">
+      
+        <div class="stats">
+          <i class="material-icons">local_offer</i> توسط گیت‌هاب
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title ">لیست محصولات</h4>
+        <p class="card-category"> 
+         
+        </p>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <thead class=" text-primary">
+              <th>
+                ID
+              </th>
+              <th>
+                نام
+              </th>
+             
+              <th>
+               &nbsp;
+              </th>
+            </thead>
+            <tbody>
+             {% for product in products %}
+               <tr>
+                <td>
+                  {{product.id}}
+                </td>
+                <td>
+                  <a class="text-primary" href="{{product.get_absolute_url}}">{{product.name}}</a>
+              
+                </td>
+               
+                <td>
+                  <a class="text-primary" href="{{product.get_edit_url}}">
+                  <i class="material-icons">settings</i>  
+                  </a>
+              
+                </td>
+              </tr> 
+             {% endfor %}
+             
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title mt-0"> لیست دسته بندی ها</h4>
+        <p class="card-category"></p>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="">
+              <th>
+                ID
+              </th>
+              <th>
+                نام
+              </th>
+            
+              <th>
+                &nbsp;
+              </th>
+            </thead>
+            <tbody>
+              {% for category in categories %}
+              <tr>
+               <td>
+                 {{category.id}}
+               </td>
+               <td>
+                <a class="text-primary" href="{{category.get_absolute_url}}">
+                  <i class="material-icons">{{category.icon}}</i>&nbsp;&nbsp;&nbsp;
+                  {{category.name}}</a>
+              
+               </td>
+              
+               <td>
+                <a title="ویرایش" class="text-primary" href="{{category.get_edit_url}}">
+                  <i class="material-icons">settings</i>  
+                  </a>
+               </td>
+             </tr> 
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div> <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title mt-0"> لیست مشتری ها</h4>
+        <p class="card-category"></p>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead >
+              <th>
+                ID
+              </th>
+              <th>
+                نام
+              </th>
+               <th>
+                حساب
+              </th>
+            
+              <th>
+                &nbsp;
+              </th>
+            </thead>
+            <tbody>
+              {% for customer in customers %}
+              <tr>
+               <td>
+                 {{customer.id}}
+               </td>
+               <td>
+                <a class="text-primary" href="{{customer.get_absolute_url}}">{{customer.name}}</a>
+              </td>
+            
+              <td class="{{ customer.rest | to_rest_color }}">   {{customer.rest | to_price}}
+               </td>
+            
+               <td>
+                <a class="text-primary" href="{{customer.get_edit_url}}">
+                  <i class="material-icons">settings</i>  
+                  </a>
+               </td>
+             </tr> 
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title mt-0"> لیست فروشگاه ها</h4>
+        <p class="card-category"></p>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead >
+              <th>
+                ID
+              </th>
+              <th>
+                نام
+              </th>
+               <th>
+                حساب
+              </th>
+            
+              <th>
+                &nbsp;
+              </th>
+            </thead>
+            <tbody>
+              {% for supplier in suppliers %}
+              <tr>
+               <td>
+                 {{supplier.id}}
+               </td>
+               <td>
+                <a class="text-primary" href="{{supplier.get_absolute_url}}">{{supplier.name}}</a>
+              </td>
+            
+              <td class="{{ supplier.rest | to_rest_color }}">   {{supplier.rest | to_price}}
+               </td>
+            
+               <td>
+                <a class="text-primary" href="{{customer.get_edit_url}}">
+                  <i class="material-icons">settings</i>  
+                  </a>
+               </td>
+             </tr> 
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div>
+    <button type="button" id="btnAddProfile1" class="btn btn-primary" onClick="showAndroidToast('Hello Hossein!')" >Say hello</button>
+    <button type="button" id="btnAddProfile2" class="btn btn-primary" onClick="showAndroidToast('Hello Hossein!')" >Say hello</button>
+
+
+</div>
+
+{% endblock %}
+{% block scripts %}
+
+
+
+<script type="text/javascript">
+    function showAndroidToast(toast) {
+        var s=Android.showToast(toast);
+        $("#btnAddProfile2").html(s);
+        showNotification('bottom', 'center', 'face', 'success', s)
+    
+    }
+</script>
+
+<script>
+  $("#dashboard-tables-link").addClass("active");
+
+
+
+
+</script>
+
+{% endblock %}
+{% block styles %}
+{% endblock %}
+
+        

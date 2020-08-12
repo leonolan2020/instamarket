@@ -1,0 +1,128 @@
+
+{% if current_profile %}
+<!-- Modal -->
+<div class="modal fade" id="ProfilaModal" tabindex="-1" role="dialog" aria-labelledby="ProfilaModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="">
+
+            <div class="modal-content card card-stats">
+                <div class="card-header card-header-primary card-header-icon">
+                    <div style="border-radius: 600px ;padding:10px !important;" class="card-icon">
+
+                        <img style="border-radius: 130px ;" src="{{current_profile.get_image}}" width="130px"
+                            height="130px" alt="">
+                    </div>
+                  <p class="card-category">&nbsp;</p>
+                    <a href="{% url 'dashboard:profile' %}"> <h3 class="card-title mx-2">
+                        <span  class="mx-2"> {{current_profile.name}}</span></h3></a>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'dashboard:home' %}">دشبورد</a>
+                   
+                    <small class="px-3 text-secondary">تغییر نقش&nbsp;:&nbsp;</small>
+                
+
+                    {% if current_customer %}
+                    <form action="{% url 'dashboard:change_profile' %}" method="POST">
+                        {% csrf_token %}
+
+                        <input type="hidden" name="actived" value="{{current_customer.id}}">
+                        <button class=" btn btn-success " type="submit">
+
+                            <i class="material-icons">settings</i>
+                            مشتری
+                            :
+                            {{current_customer.name}}
+                        
+
+                        </button>
+                    </form>
+                    {% endif %}
+
+
+
+
+                    {% if current_supplier %}
+                    <form action="{% url 'dashboard:change_profile' %}" method="POST">
+                        {% csrf_token %}
+
+                        <input type="hidden" name="actived" value="{{current_supplier.id}}">
+                        <button class=" btn btn-danger " type="submit">
+
+                            <i class="material-icons">store</i>
+                            فروشنده
+                            :
+                            {{current_supplier.name}}
+                        </button>
+                    </form>
+                    {% endif %}
+
+
+
+
+                    {% if current_shipper %}
+                    <form action="{% url 'dashboard:change_profile' %}" method="POST">
+                        {% csrf_token %}
+
+                        <input type="hidden" name="actived" value="{{current_shipper.id}}">
+                        <button class=" btn btn-warning " type="submit">
+
+                            <i class="material-icons">local_shipping</i>
+                            پیک
+                            :
+                            {{current_shipper.name}}
+                        </button>
+                    </form>
+                    {% endif %}
+
+
+
+                    {% if current_employee %}
+                    <form action="{% url 'dashboard:change_profile' %}" method="POST">
+                        {% csrf_token %}
+
+                        <input type="hidden" name="actived" value="{{current_employee.id}}">
+                        <button class=" btn btn-info" type="submit">
+
+                            <i class="material-icons">group_work</i>
+                            کارمند
+                            :
+                            {{current_employee.name}}
+                        </button>
+                    </form>
+                    {% endif %}
+
+
+
+
+                    <form action="{% url 'dashboard:logout' %}" action="GET">
+                        <!-- <button class=" btn btn-sm btn-danger">
+                            <i class="material-icons">power_setting</i>
+                          
+                        </button> -->
+
+                        <button class="btn btn-link text-danger " type="submit">
+
+                            <i class="material-icons">power_settings_new</i>
+                            <span>خروج</span></button>
+
+                    </form>
+                </div>
+
+                <div class="card-footer">
+                    
+                    <div class="stats">
+                        <p>
+                          
+                            <span>آخرین ورود&nbsp;:&nbsp;{{current_profile.user.last_login | to_persian_date}}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+{% endif %}

@@ -1,0 +1,230 @@
+{% extends "dashboard/layout.html" %}
+
+{% load to_order_status_color %}
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+{% block contents %}
+
+ {% if active_supplier %}
+
+    <div class="card" id="filter-app" v-clock>
+        <div class="card-header card-header-primary">
+            <h4 class="card-title ">به تفکیک تاریخ</h4>
+
+
+
+        </div>
+        <div class="card-body">
+
+            <div>از
+                <date-picker v-model="start_date"></date-picker>
+            </div>
+
+
+
+            <div>تا
+                <date-picker v-model="end_date"></date-picker>
+            </div>
+
+
+
+        
+
+
+            <a :href="'{%url 'shop:orders_supplier' supplier_id=active_supplier.id%}'+parse(start_date)+'/'+parse(end_date)+'/'"
+                class="btn btn-primary">
+                {% verbatim %}
+                  
+                از&nbsp;&nbsp;{{start_date}}&nbsp;&nbsp;تا
+                &nbsp;&nbsp;{{end_date}}&nbsp;&nbsp;فیلتر کن
+            
+                {% endverbatim %}
+            </a>
+
+           
+        </div>
+
+    </div>
+
+
+
+ {% endif %}
+
+<div class="row">
+
+
+
+{% if orders %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header card-header-primary">
+            <h4 class="card-title ">سفارشات</h4>
+            {% if orders %}
+            <p class="card-category">
+                {{title_orders}}
+            </p>
+            {% else %}
+
+
+            <p class="card-category">
+                لیست سفارشات شما خالی می باشد.
+            </p>
+
+
+            {% endif %}
+
+        </div>
+        {% if orders %}
+
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class=" text-primary">
+
+                        <th>
+
+                        </th>
+                        <th>
+                            فروشنده
+                        </th>
+                        <th>
+                            خریدار
+                        </th>
+
+                        <th>
+                            تاریخ
+                        </th>
+                        <th>
+                            مبلغ
+                        </th>
+
+
+
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+
+
+                        <tr>
+                            <td><a href="{{order.get_absolute_url }}" class="text_primary">
+                                    <i class="material-icons">list</i></a>
+                                <span
+                                    class="mx-1 badge badge-{{order.status | to_order_status_color}}">{{order.status}}</span>
+                            </td>
+
+
+                            <td>
+                                <a href="{{order.supplier.get_absolute_url}}">{{order.supplier.name}}</a>
+                            </td>
+
+
+                            <td>
+                                <a href="{{order.customer.get_absolute_url}}">{{order.customer.name}}</a>
+                            </td>
+
+
+                            <td>
+                                {{order.persian_order_date }}
+                            </td>
+
+                            <td class="text-success">
+                                {{order.total | to_price }}
+                            </td>
+
+
+
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% else %}
+<div class="col-md-4">
+
+</div>
+<div class="col-md-4">
+    <div id="app_profile" class="card card-profile">
+        <div class="card-avatar">
+            <a href="javascript:;">
+                <img src="{% static 'logo.svg' %}" class="img">
+            </a></div>
+        <div class="card-body">
+            <h6 class="card-category text-gray text-center"></h6>
+            <h4 class="card-title text-center">لیست سفارشات
+                خالی می باشد</h4>
+
+
+
+        </div>
+    </div>
+
+
+
+</div>
+
+<div class="col-md-4">
+
+</div>
+{% endif %}
+
+
+
+</div>
+
+
+
+{% endblock %}
+{% block scripts %}
+
+<script src="{% static 'dashboard/persian/Vue.js' %}"></script>
+<script src="{% static 'dashboard/persian/moment.js' %}"></script>
+<script src="{% static 'dashboard/persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'dashboard/persian/vue-persian-datetime-picker-browser.js' %}"></script>
+<script>
+    var start_date = '{{start_date}}'
+    var end_date = '{{end_date}}'
+</script>
+<script>
+    var app = new Vue({
+        el: '#filter-app',
+        data: {
+            start_date: start_date,
+            end_date: end_date,
+        },
+        methods: {
+            parse: function (date) {
+                return date.replace('/', '_').replace('/', '_')
+            },
+            showDate: function () {
+                console.log(this.start_date)
+                console.log(this.end_date)
+            },
+        },
+        components: {
+            DatePicker: VuePersianDatetimePicker
+        }
+    });
+</script>
+
+<script>
+    $("#sidebar-orders-link").addClass("active");
+</script>
+{% endblock %}
+{% block styles %}
+<style>
+    .vpd-main>.vpd-input-group>.bmd-form-group>.form-control {
+        width: fit-content !important;
+    }
+
+    .date-picker-container .form-control {
+        width: fit-content !important;
+    }
+</style>
+{% endblock %}

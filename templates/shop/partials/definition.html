@@ -1,0 +1,61 @@
+{% load to_persian_date %}
+{% load static %}
+<div class="card card-stats" >
+    <div class="card-header card-header-warning card-header-icon">
+
+      <p class="card-category" style="font-size: 0.75em !important;">
+        &nbsp;
+      </p> {% verbatim %}
+      <p v-html="definition.with_links" class="text-muted my-0"  style="font-size: 1em !important;">
+       
+
+      
+        
+
+      </p>{% endverbatim %}
+
+    </div>
+    <div class="card-footer">
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-success btn-sm">
+          <i class="material-icons">thumb_up</i>
+        </button>
+        <button class="btn btn-secondary">
+          12
+        </button>
+        <button type="button" class="btn btn-danger btn-sm">
+          <i class="material-icons">thumb_down</i>
+        </button>
+      </div>
+      <div class="stats">
+
+
+
+        <p class="card-category">
+
+
+
+          <a :href="definition.profile.get_absolute_url">
+
+
+            <img class="" height="24px" width="24px" style="border-radius: 50px;" :src="definition.profile.get_image"
+              alt="">
+
+
+          </a>
+
+
+
+          <span style="font-size: 0.75em !important;">
+            {% verbatim %}
+            {{definition.get_date_added }}
+            {% endverbatim %}
+
+          </span>
+
+
+
+        </p>
+      </div>
+    </div>
+  </div>

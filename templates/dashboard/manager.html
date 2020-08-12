@@ -1,0 +1,254 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% block contents %}
+
+
+
+
+
+<div class="row" id="manager-app">
+    {% if add_notification_form %}
+
+
+
+    <div class="col-lg-6 ">
+        <div class="card card-stats">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">content_copy</i>
+                </div>
+                <p class="card-category">ارسال پیام</p>
+                <h3 class="card-title">Notification
+                    <small> Channel</small>
+                </h3>
+            </div>
+            <div class="card-body">
+                <!-- <form action="{% url 'pusher:send_channel' %}" method="POST"> -->
+                <form @submit.prevent="send_notification">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group bmd-form-group is-filled">
+                                <label class="bmd-label-floating">پروفایل</label>
+                                <select required name="profile_id" id="profile_id" v-model="profile_id" class="form-control">
+                                    {% for site_profile in  site_profiles %}
+                                    <option value="{{site_profile.id}}">
+                                        {{site_profile.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <div class="form-group bmd-form-group is-filled">
+                                <label class="bmd-label-floating">اولویت</label>
+
+                                <select required name="priority" id="priority" v-model="priority" class="form-control">
+                                    {% for priority in  priority_range %}
+                                    <option value="{{priority}}">{{priority}}</option>
+                                    {% endfor %}
+                                </select>
+
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group is-filled">
+                                <label class="bmd-label-floating">عنوان</label>
+                                <input required v-model="title" name="title" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group is-filled">
+                                <label class="bmd-label-floating">پیام</label>
+                                <input required v-model="body" name="body" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group is-filled">
+                                <label class="bmd-label-floating">لینک</label>
+                                <input style="text-align: left!important;direction: ltr!important;" v-model="link"
+                                    name="link" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group bmd-form-group is-filled">
+                                <label class="bmd-label-floating">آیکون</label>
+
+                                <select required name="icon" id="icon" v-model="icon" class="form-control">
+                                    <option selected value="notifications">
+                                        <div class="text-center my-3"> <i class="material-icons">notifications</i></div>
+                                    </option>
+                                    <template v-for="icon1 in icons">
+                                        <option :value="icon1">
+                                            <div class="text-center my-3"> <i
+                                                    class="material-icons">{% verbatim %}{{icon1}}{% endverbatim %}</i>
+                                            </div>
+                                        </option>
+                                    </template>
+
+                                </select>
+                                <div class="text-center my-3"> <i :class="'material-icons text-'+color">
+                                        {% verbatim %}
+                                        {{icon}}
+                                        {% endverbatim %}
+                                    </i></div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group bmd-form-group is-filled">
+                                <label class="bmd-label-floating">رنگ</label>
+                                <div class="row">
+                                    <a @click="set_color('info')" :class="get_class('info')"><div v-html="is_color('info')"></div></a>
+                                    <a @click="color='success'" :class="get_class('success')"><span v-html="is_color('success')"></span>
+                                      </a>
+                                    <a @click="color='warning'" :class="get_class('warning')"><span v-html="is_color('warning')"></span></a>
+
+                                    <a @click="color='danger'" :class="get_class('danger')"><span v-html="is_color('danger')"></span></a>
+                                    <a @click="color='primary'" :class="get_class('primary')"><span v-html="is_color('primary')"></span></a>
+                                    <a @click="color='dark'" :class="get_class('dark')"><span v-html="is_color('dark')"></span></a>
+
+                                    <a @click="color='secondary'" :class="get_class('secondary')"><span v-html="is_color('secondary')"></span></a>
+                                    <a @click="color='rose'" :class="get_class('rose')"><span v-html="is_color('rose')"></span>  </a>
+                                </div>
+                                <!-- <span :class="'d-block px-3 py-3 bg-'+color">رنگ انتخابی</span> -->
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <button :class="'btn btn-'+color" type="submit">
+                        <i class="material-icons text-light">{% verbatim %}{{icon}}{% endverbatim %}</i>
+                        ارسال پیام</button>
+                </form>
+
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <i class="material-icons text-danger">warning</i>
+                    <a href="#pablo">فضای بیشتری داشته باشید...</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
+
+    <div class="col-12">
+        <p>
+            {{message}}
+        </p>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+{% block scripts %}
+<script>
+
+
+    let csrfmiddlewaretoken = ''
+    $(document).ready(function () {
+        // Javascript method's body can be found in assets/js/demos.js
+        csrfmiddlewaretoken = $("input[name='csrfmiddlewaretoken']").val()
+
+
+    });
+    var profile_id = {{ profile.id }}
+    var icons = {{ icons_s | safe}}
+
+</script>
+<script>
+    $("#manager-link").addClass("active");
+    let manager_app = new Vue({
+        el: "#manager-app",
+        data: {
+            title: 'سلام',
+            body: 'خسته نباشید',
+            priority: 1,
+            color: 'info',
+            icon: 'notification_important',
+            profile_id: profile_id,
+            link: '#',
+            icons: icons,
+        },
+        methods: {
+            is_color: function (color1) {
+                if (color1 === this.color) {
+                    return '<i class="text-light material-icons">done</i>'
+                }
+                else return '&nbsp;'
+            },
+            set_color: function (color1) {
+                this.color = color1
+                this.get_class(color1)
+            },
+            get_class: function (color1) {
+                let css = 'col-3 btn btn-' + color1
+                let border = ''
+                if (this.color === color1) {
+                    border = ' border border-dark'
+
+                }
+                
+                return css + border
+            },
+            send_notification: function () {
+                post_send_notification()
+            },
+
+        },
+
+    })
+    function post_send_notification() {
+        //console.log('postAddCategory')
+        let url = '{% url "dashboard:add_notification" %}'
+        // Send the data using post
+        // var getting = $.get(url);
+        // let title = manager_app.title
+        // let body = manager_app.body
+        // let color = manager_app.color
+        // let icon = manager_app.icon
+        // let event_name = manager_app.event_name
+        // let channel_name = manager_app.channel_name
+        var posting = $.post(url, {
+            title: manager_app.title,
+            body: manager_app.body,
+            color: manager_app.color,
+            link: manager_app.link,
+            icon: manager_app.icon,
+            priority: manager_app.priority,
+            profile_id: manager_app.profile_id,
+            csrfmiddlewaretoken: csrfmiddlewaretoken
+
+
+
+        })
+        posting.done(function (data) {
+            if (data.result === 'SUCCEED')
+                showNotification('bottom', 'center', 'category', 'warning', ' پیام با موفقیت ارسال شد')
+
+
+        })
+
+    }
+
+
+
+
+
+</script>
+{% endblock %}
+{% block styles %}
+
+{% endblock %}

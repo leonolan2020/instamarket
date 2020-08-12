@@ -1,0 +1,159 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+{% block contents %}
+
+<div class="row" id="word_app" >
+
+  {% if word %}
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    {% include 'dic/partials/word.html' %}
+  </div>
+  {% endif %}
+
+
+  <div class="col-lg-12 col-md-12 col-sm-12" v-for="definition in definitions">
+   {% include 'dic/partials/definition.html' %}
+  </div>
+
+
+  {% if new_definition_form %}
+
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <form id="add_definition_form" action="{% url 'data:new_definition_api' %}" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="word_id" value="{{word.id}}">
+      <div class="card card-stats">
+        <div class="card-header card-header-warning card-header-icon">
+
+          <p class="card-category" style="font-size: 0.75em !important;">
+            &nbsp;
+          </p>
+          <p class="text-muted my-0" style="font-size: 1em !important;">
+            <input v-model="new_definition.definition" type="text" maxlength="1000" required placeholder="تعریف جدید"
+              class="form-control" name="definition">
+          </p>
+
+        </div>
+        <div class="card-footer" style="border-top:none !important;">
+
+          <div class="stats">
+
+
+
+            <button type="submit" class="btn btn-primary">افزودن تعریف</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  {% endif %}
+
+
+  {% endblock %}
+  {% block scripts %}
+
+  <script>
+    // $("#dashboard-link").addClass("active");
+
+    let word_app = new Vue({
+      el: "#word_app",
+      data: {
+        word: {},
+        definitions: [],
+        new_definition: {},
+      },
+      methods: {
+        add_definition_form: function (event) {
+          event.preventDefault();
+          this.new_definition = {
+            definition: this.new_definition.definition,
+            word_id: this.word.id,
+            profile: { name: '{{current_profile.name}}', get_image: '{{current_profile.get_image}}' }
+
+          };
+          this.definitions.push(this.new_definition);
+          // Stop form from submitting normally
+
+          // Get some values from elements on the page:
+          AddDefinition(this.new_definition);
+          this.new_definition = {};
+        }
+
+      },
+    })
+    function get_word() {
+      url = '{{SITE_URL}}api/word/{{word.id}}/'
+      // Send the data using post
+      var getting = $.get(url);
+      // var posting = $.post(url, { message: message });
+
+      // Put the results in a div
+      getting.done(function (data) {
+        word_app.word = (data.word);
+        word_app.definitions = (data.definitions);
+        // console.log(word_app.word);
+        // console.log(word_app.definitions);        
+      });
+
+    }
+    $(document).ready(function () {
+      // Javascript method's body can be found in assets/js/demos.js
+      get_word();
+
+    });
+
+
+
+
+
+
+
+
+
+
+    $("#add_definition_form").submit(function (event) {
+
+      word_app.new_definition = {
+        with_links: word_app.new_definition.definition,
+        word_id: word_app.word.id,
+        profile: { name: '{{current_profile.name}}', image: '{{current_profile.get_image}}' }
+
+      };
+      word_app.definitions.push(word_app.new_definition);
+     
+      word_app.new_definition={}
+      // Stop form from submitting normally
+      event.preventDefault();
+
+      // Get some values from elements on the page:
+      var $form = $(this),
+        csrfmiddlewaretoken = $form.find("input[name='csrfmiddlewaretoken']").val(),
+        word_id = $form.find("input[name='word_id']").val(),
+        definition = $form.find("input[name='definition']").val(),
+        url = $form.attr("action");
+
+      // Send the data using post
+      var posting = $.post(url, { csrfmiddlewaretoken: csrfmiddlewaretoken, word_id: word_id, definition: definition });
+
+      // Put the results in a div
+      posting.done(function (data) {
+        word_app.definitions = data.definitions;
+      });
+    });
+
+
+
+
+
+
+  </script>
+  {% endblock %}
+  {% block styles %}
+  <style>
+    [v-cloak] {
+      display: none
+    }
+  </style>
+  {% endblock %}

@@ -1,0 +1,286 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% block contents %}
+
+
+
+<div class="row">
+    {% if cart_orders %}
+
+
+
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">content_copy</i>
+                </div>
+                <p class="card-category">{{selected_customer.name}}</p>
+                <h3 class="card-title">سبد خرید
+
+                </h3>
+            </div>
+            <div class="card-body">
+                <!-- <form action="{% url 'shop:submit_cart' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="customer_id" value="{{selected_profile.id}}">
+                    <input type="hidden" name="address" value="address address">
+                    <input type="hidden" name="description" value="description description">
+
+                    <input type="hidden" name="supplier_id" value="0">
+                    <button type="submit" class="btn btn-primary">
+                        تایید سبد خرید
+                    </button>
+                </form> -->
+                <p class="card-category"> مبلغ کل پیش فاکتور (ها) 
+                   
+                </p>
+                <h3 class="card-title">{{cart.total | to_price}}
+
+                </h3>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <i class="material-icons text-danger">warning</i>
+                    <a href="#pablo">فضای بیشتری داشته باشید...</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9 col-md-6 col-sm-6">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title ">پیش فاکتور ها</h4>
+
+
+
+                <p class="card-category">
+                    {{selected_customer.name}}
+                </p>
+
+
+
+
+            </div>
+            {% if cart_orders %}
+
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class=" text-primary">
+                            <th>
+
+
+                                <span>
+                                    فروشنده
+                                </span>
+
+
+                            </th>
+
+                            <th>
+                                هزینه ارسال
+                            </th>
+
+                            <th>
+                                مبلغ
+                            </th>
+                            <th>
+
+                            </th>
+
+                        </thead>
+                        <tbody>
+                            {% for order in cart_orders %}
+
+
+                            <tr>
+                                <td>
+
+                                    <a href="{{order.supplier.get_absolute_url}}">{{order.supplier.name}}</a>
+
+                                </td>
+                                <td>
+                                    {{order.ship_fee | to_price }}
+                                </td>
+
+                                <td>
+                                    {{order.total | to_price }}
+                                </td>
+
+
+                                <td>
+                                    <form action="{% url 'shop:submit_cart' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="customer_id" value="{{cart.customer.id}}">
+                                        <input type="hidden" name="address" value="address address">
+                                        <input type="hidden" name="description" value=" ">
+                                        <input type="hidden" name="supplier_id" value="{{order.supplier.id }}">
+                                        <button type="submit" class="btn btn-primary">
+                                            تایید پیش فاکتور
+                                        </button>
+                                    </form>
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div> {% endif %}
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title ">سبد خرید</h4>
+                {% if cart.lines %}
+                <p class="card-category"> برای جستجو
+                    <a href="{% url 'shop:tables' %}">اینجا</a>
+                    را کلیک کنید</p>
+                {% else %}
+
+
+                <p class="card-category">
+                    سبد خرید شما خالی می باشد.
+                </p>
+
+
+                {% endif %}
+
+            </div>
+            {% if cart.lines %}
+
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class=" text-primary">
+                            <th>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        کالا
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p>فروشگاه
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </th>
+                            <th>
+                                تعداد
+                            </th>
+                            <th>
+                                مبلغ
+                            </th>
+
+                            <th>
+                                جمع
+                            </th>
+                            <th>
+
+                            </th>
+
+                        </thead>
+                        <tbody>
+                            {% for cart_line in cart.lines %}
+
+
+                            <tr>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a
+                                                href="{{cart_line.shop.product.get_absolute_url}}">{{cart_line.shop.product.name}}</a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="{{cart_line.shop.supplier.get_absolute_url}}"
+                                                class="text-secondary">{{cart_line.shop.supplier.name}}
+                                            </a> </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{cart_line.quantity }} {{cart_line.shop.unit_name }}
+                                </td>
+
+                                <td>
+                                    {{cart_line.shop.price | to_price }}
+                                </td>
+
+                                <td>
+                                    {{cart_line.total | to_price }}
+                                </td>
+
+                                <td>
+                                    {% if remove_from_cart_form %}
+                                    <form action="{% url 'shop:remove_from_cart' %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="shop_id" value="{{cart_line.shop.id}}">
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="material-icons">clear</i>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div> {% endif %}
+        </div>
+    </div>
+    {% else %}
+
+
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-4">
+        <div id="app_profile" class="card card-profile">
+            <div class="card-avatar">
+                <a href="javascript:;">
+                    <img src="{% static 'logo.svg' %}" class="img">
+                </a></div>
+            <div class="card-body">
+                <h6 class="card-category text-gray text-center"></h6>
+                <h4 class="card-title text-center">سبد خرید
+                    {{selected_customer.name}} خالی می باشد</h4>
+
+                <a href="{{selected_customer.get_orders_url}}" class="btn btn-success">سفارشات</a>
+
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+    {% endif %}
+
+
+
+</div>
+
+
+
+{% endblock %}
+{% block scripts %}
+<script>
+    $("#sidebar-cart-link").addClass("active");
+</script>
+{% endblock %}
+{% block styles %}
+{% endblock %}

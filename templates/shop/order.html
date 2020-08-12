@@ -1,0 +1,416 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load to_order_status_color %}
+{% block contents %}
+
+
+
+<div class="row">
+    {% if do_pack_form %}
+    <div class="col-lg-4 col-md-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-primary card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">open_in_browser</i>
+                </div>
+                <p class="card-category">بسته بندی سفارش</p>
+                <h3 class="card-title">
+                    <small>سفارش </small>{{order.id}}
+                </h3>
+            </div>
+            <div class="card-body">
+
+
+
+                <p>
+                    وضعیت سفارش : <span
+                        class="badge badge-{{order.status | to_order_status_color}}">{{order.status}}</span>
+                </p>
+
+                
+                <p>
+                    مبلغ قابل پرداخت سفارش : <span class="text-primary"
+                       >{{order.total | to_price}}</span>
+                </p>
+
+                <form action="{% url 'shop:do_pack_order' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{order.id}}">
+                    <input type="number" placeholder="تعداد بسته ها" min="1" max="100" name="count_of_packs" class="form-control">
+                    <input type="text" placeholder="توضیحات" name="description" class="form-control">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="material-icons">open_in_browser</i>
+                        بسته بندی کردم
+                    </button>
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <a class="text-success" href="{{order.get_download_url}}">
+                        <i class="material-icons">get_app</i>&nbsp;دانلود فایل اکسل
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if do_ship_form %}
+    <div class="col-lg-4 col-md-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">local_shipping</i>
+                </div>
+                <p class="card-category">ارسال سفارش</p>
+                <h3 class="card-title">
+                    <small>سفارش </small>{{order.id}}
+                </h3>
+            </div>
+            <div class="card-body">
+
+
+
+                <p>
+                    وضعیت سفارش : <span
+                        class="badge badge-{{order.status | to_order_status_color}}">{{order.status}}</span>
+                </p>
+
+                
+                <p>
+                    هزینه ارسال سفارش : <span class="text-primary"
+                       >{{order.ship_fee | to_price}}</span>
+                </p>
+
+                <form action="{% url 'shop:do_ship_order' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{order.id}}">
+                    <input type="text" placeholder="توضیحات" name="description" class="form-control">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="material-icons">local_shipping</i>
+                       ارسال کردم
+                    </button>
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <a class="text-success" href="{{order.get_download_url}}">
+                        <i class="material-icons">get_app</i>&nbsp;دانلود فایل اکسل
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if do_deliver_form %}
+    <div class="col-lg-4 col-md-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">local_shipping</i>
+                </div>
+                <p class="card-category">تحویل سفارش</p>
+                <h3 class="card-title">
+                    <small>سفارش </small>{{order.id}}
+                </h3>
+            </div>
+            <div class="card-body">
+
+
+
+                <p>
+                    وضعیت سفارش : <span
+                        class="badge badge-{{order.status | to_order_status_color}}">{{order.status}}</span>
+                </p>
+
+                
+                <p>
+                    مبلغ قابل پرداخت سفارش : <span class="text-primary"
+                       >{{order.total | to_price}}</span>
+                </p>
+
+                <form action="{% url 'shop:do_deliver_order' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{order.id}}">
+                    <input type="text" placeholder="توضیحات" name="description" class="form-control">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="material-icons">local_shipping</i>
+                       تحویل گرفتم
+                    </button>
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <a class="text-success" href="{{order.get_download_url}}">
+                        <i class="material-icons">get_app</i>&nbsp;دانلود فایل اکسل
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-lg-4 col-md-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">assignment_turned_in</i>
+                </div>
+                <p class="card-category">فضا مصرف شده</p>
+                <h3 class="card-title">
+                    <small>سفارش </small>{{order.id}}
+                </h3>
+            </div>
+            <div class="card-body">
+
+                <p>
+                    فروشنده :
+                    <a href="{{order.supplier.get_absolute_url}}">
+                        {{order.supplier.name}}
+                    </a>
+
+
+
+                </p>
+
+                <p>
+                    خریدار :
+                    <a href="{{order.customer.get_absolute_url}}">
+                        {{order.customer.name}}
+                    </a>
+
+
+
+                </p>
+
+              {% if order.shipper %}
+                <p>
+                    ارسال کننده :
+                    <a href="{{order.shipper.get_absolute_url}}">
+                        {{order.shipper.name}}
+                    </a>
+
+
+
+                </p>
+              {% endif %}  
+                <p>
+                    وضعیت سفارش : <span
+                        class="badge badge-{{order.status | to_order_status_color}}">{{order.status}}</span>
+                </p>
+
+                <p>
+                    قابل پرداخت سفارش :  <span class="btn btn-danger">جمع کل :{{ order.total | to_price }}</span>
+                </p>
+                <p>تعداد بسته ها : <span class="text-success">{{order.count_of_packs}}</span> بسته</p>
+{% if order.description  %}
+     <p>
+                    توضیحات : 
+                    <span class="text-secondary">
+                    <small>
+                        {{order.description | safe}}</small></span></p>
+{% endif %}
+             
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <a class="text-success" href="{{order.get_download_url}}">
+                        <i class="material-icons">get_app</i>&nbsp;دانلود فایل اکسل
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">schedule</i>
+                </div>
+                <p class="card-category">فضا مصرف شده</p>
+                <h3 class="card-title">
+                    <small> پیگیری سفارش</small>
+                </h3>
+            </div>
+            <div class="card-body">
+
+                <p>
+                    تاریخ سفارش : {{order.persian_order_date}}
+                </p>
+                {% if order.persian_accept_date %}
+                <p>
+                    تاریخ تایید : {{order.persian_accept_date}}
+                </p>
+                {% endif %}
+                {% if order.persian_pack_date %}
+                <p>
+                    تاریخ بسته بندی : {{order.persian_pack_date}}
+                </p>
+                {% endif %}
+                {% if order.persian_ship_date %}
+                <p>
+                    تاریخ ارسال : {{order.persian_ship_date}}
+                </p>{% endif %}
+                {% if order.persian_deliver_date %}
+                <p>
+
+                    تاریخ تحویل : {{order.persian_deliver_date}}
+                </p>
+                {% endif %}
+
+
+
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <i class="material-icons text-danger">warning</i>
+                    <a href="#pablo">فضای بیشتری داشته باشید...</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-danger card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">euro_symbol</i>
+                </div>
+                <p class="card-category">فضا مصرف شده</p>
+                <h3 class="card-title">
+                    <small> اطلاعات مالی</small>
+                </h3>
+            </div>
+            <div class="card-body">
+                <p>هزینه اقلام : {{order.lines_total | to_price}}</p>
+                <p>هزینه ارسال : {{order.ship_fee | to_price}}</p>
+                <p>
+                    <span class="btn btn-danger">جمع کل :{{ order.total | to_price }}</span>
+                   </p>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <i class="material-icons text-danger">warning</i>
+                    <a href="#pablo">فضای بیشتری داشته باشید...</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title ">
+
+                    <small>
+                        سفارش شماره
+
+                    </small>
+                    {{order.id}}
+                </h4>
+
+
+
+
+
+
+            </div>
+            {% if order.lines %}
+
+
+            <div class="card-body">
+
+
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class=" text-primary">
+                            <th>
+                                ردیف
+                            </th>
+
+                            <th>
+                                کالا
+                            </th>
+
+                            <th>
+                                تعداد
+                            </th>
+
+                            <th>
+                                قیمت
+                            </th>
+
+                            <th>
+                                جمع
+                            </th>
+
+                        </thead>
+                        <tbody>
+                            {% for order_line in order.lines %}
+
+
+                            <tr>
+                                <td>
+                                    {{order_line.row_number }}
+                                </td>
+                                <td>
+                                    <a href="{{order_line.product.get_absolute_url }}"> {{order_line.product.name }}</a>
+                                </td>
+
+
+
+                                <td>
+                                    {{order_line.quantity }}
+                                    {{order_line.unit_name }}
+                                </td>
+
+                                <td>
+                                    {{order_line.price | to_price }}
+                                </td>
+
+                                <td>
+                                    {{ order_line.total | to_price }}
+                                </td>
+
+
+
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-secondary"> هزینه اقلام : {{order.lines_total | to_price}}</div>
+                    <div class="col-md-4 text-secondary"> هزینه ارسال :
+
+                        {{ order.ship_fee | to_price }}
+                    </div>
+                    <div class="col-md-4"> 
+                        <span class="btn btn-danger">جمع کل :{{ order.total | to_price }}</span>
+                    </div>
+
+
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+
+
+{% endblock %}
+{% block scripts %}
+<script>
+    $("#sidebar-orders-link").addClass("active");
+</script>
+{% endblock %}
+{% block styles %}
+{% endblock %}

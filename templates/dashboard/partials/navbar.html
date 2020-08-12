@@ -1,0 +1,229 @@
+{% load static %}
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top">
+    <div class="container-fluid">
+
+        <div class="navbar-wrapper">
+            <a class="navbar-brand d-lg-none mr-5" href="{% url 'dashboard:home' %}" title="{{dashboard.title.value}}">
+                <img width="48px" src="{% static 'logo.svg' %}" alt=""></a>
+
+            {% if search_form %}
+
+
+            <form class="navbar-form" action="{% url 'dashboard:search' %}" method="POST">
+                {% csrf_token %}
+                <div class="input-group no-border">
+                    <input type="text" name="search_for" class="form-control" placeholder="جستجو ...">
+
+
+
+                </div>
+            </form> {% endif %}
+
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+
+        </button>
+        <div class="collapse navbar-collapse justify-content-end">
+            <!-- <form class="navbar-form">
+                <div class="input-group no-border">
+                    <input type="text" value="" class="form-control" placeholder="جستجو...">
+                    <button type="submit" class="btn btn-white btn-round btn-just-icon">
+                        <i class="material-icons">search</i>
+                        <div class="ripple-container"></div>
+                    </button>
+                </div>
+            </form> -->
+            <ul class="navbar-nav">
+                {% if perms.leodashboard.can_change_parameter %}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ADMIN_URL}}">
+                        <i class="material-icons">settings</i>
+                        <p class="d-lg-none d-md-block">
+                            ادمین
+                        </p>
+                    </a>
+                </li>
+                {% endif %}
+
+
+                <li class="nav-item dropdown" id="app-notifications" v-cloak>
+                    <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="material-icons">notifications</i>
+                        <span class="notification" v-show="notifications.length>0">
+                            {% verbatim %}
+
+                            {{notifications_count}}
+                            {% endverbatim %}</span>
+                        <p class="d-lg-none d-md-block">
+                            اعلان‌ها
+                        </p>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+
+                        <div v-for="notification in notifications">
+
+
+
+
+
+
+
+                            {% verbatim %}
+
+
+
+                                <a :href="notification.get_absolute_url" :class="'mt-1 mb-1 nav-link text-light btn btn-'+notification.color"><i class="material-icons"
+                                        data-notify="icon">{{notification.icon}}</i>
+                                   {{notification.title}}
+                                 
+                                </a>
+
+
+
+                   
+                            {% endverbatim %}
+
+
+
+                        </div>
+
+                        <a href="{% url 'dashboard:home'  %}" class="mt-1 mb-1 nav-link "><i class="material-icons"
+                            data-notify="icon">alarm</i>
+                       نمایش همه پیام ها
+                     
+                    </a>
+
+
+
+                    </div>
+                </li>
+
+
+
+
+
+
+
+                {% if profile %}
+
+
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="javascript:;" id="navbarDropdownProfile344" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <img src="{{profile.image}}" width="24px" class="rounded-circle" alt="">
+
+                        <span class="d-lg-none">
+                            &nbsp;&nbsp;&nbsp;
+
+                            {{profile.name}}
+                        </span>
+                        <div class="ripple-container"></div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile344">
+                        <div class="mt-2 px-2">
+
+                            <div style="margin-left: 1em;">
+   <a class="my-2 d-block text-center pt-2 btn btn-link" title="پروفایل" 
+                            href="{{profile.get_absolute_url}}"
+                            >
+                            <img src="{{profile.image}}" class="rounded-circle" width="128px" alt="">
+                            <br>    <br>
+                            {{profile.name}}
+                                <br>
+                                <small>
+                            {{profile.child_class}}</small>
+                                </a>
+                            </div>
+                         
+                        </div>
+                       
+                      
+                      
+                       
+                        {% if profiles %}
+
+                        <div class="mt-2 px-2">
+
+                            <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                تغییر نقش :
+                            </small>
+
+
+
+                            {% for current_profile in profiles %}
+                            <form style="margin-left: 1em;" action="{% url 'dashboard:change_profile' %}" method="POST">
+                                {% csrf_token %}
+
+                                <input type="hidden" name="actived" value="{{current_profile.id}}">
+                                <button class="my-1 btn-block  btn btn-danger " type="submit">
+
+
+                                    {{current_profile.child_class}}
+                                    :
+                                    {{current_profile.name}}
+                                </button>
+                            </form>
+
+                            {% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        </div>
+                        {% endif %}
+
+                        <div class="dropdown-divider"></div>
+
+
+                        <form action="{% url 'dashboard:logout' %}" action="GET">
+                            <!-- <button class=" btn btn-sm btn-danger">
+            <i class="material-icons">power_setting</i>
+          
+        </button> -->
+
+                            <button class="btn btn-link text-danger " type="submit">
+
+
+                                خروج کاربر</button>
+
+                        </form>
+
+
+                    </div>
+                </li>
+                {%else%}
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="{% url 'dashboard:login' %}">
+
+                        <i class="material-icons">vpn_key</i>
+                        <p class="d-lg-none d-md-block">
+                            ورود
+                        </p>
+                    </a>
+
+                </li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- End Navbar -->

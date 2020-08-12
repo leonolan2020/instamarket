@@ -1,0 +1,306 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% block contents %}
+
+
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card card-stats">
+      <div class="card-header card-header-warning card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">store</i>
+        </div>
+        <p class="card-category">فایل excel</p>
+        <h3 class="card-title">{{supplier.name}}</h3>
+      </div>
+      <div class="card-body">   
+        <div>  <a href="{% url 'dashboard:transactions' profile_id=supplier.id %}" class="btn btn-block btn-danger">
+          <i class="material-icons">euro_symbol</i>
+          تراکنش های مالی</a>
+       </div>
+        <div> <a href="{% url 'shop:orders_supplier' supplier_id=supplier.id %}" class="btn btn-block btn-info">
+          <i class="material-icons">fact_check</i>
+         سفارشات</a></div>
+        <div> <a href="{{SITE_URL}}download/{{supplier.id}}/" class="btn btn-block btn-success">
+          <i class="material-icons">get_app</i>
+          دانلود فایل اکسل
+        </a>
+   </div>
+      
+ 
+       
+        <!-- <a href="{% url 'shop:orders_supplier' supplier_id=supplier.id %}" class="btn btn-success">
+          <i class="material-icons">get_app</i>
+          لیست سفارشات
+        </a> -->
+
+      </div>
+
+      <div class="card-footer">
+
+        <div class="stats">
+          <i class="material-icons">local_offer</i> توسط گیت‌هاب
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-chart">
+      <div class="card-header card-header-success">
+        <div class="ct-chart" id="websiteViewsChart1">
+
+        </div>
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">تراکنش های {{supplier.name}}</h4>
+        <p class="card-category">
+          <span class="text-success">
+            <i class="fa fa-long-arrow-up"></i> 55% </span> رشد در فروش امروز.</p>
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">access_time</i> ۴ دقیقه پیش
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title mt-0"> لیست پرسنل {{supplier.name}}</h4>
+        <p class="card-category"></p>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="">
+              <th>
+                ID
+              </th>
+              <th>
+                نام
+              </th>
+
+              <th>
+                &nbsp;
+              </th>
+            </thead>
+            <tbody>
+              {% for employee in employees %}
+              <tr>
+                <td>
+                  {{employee.id}}
+                </td>
+                <td>
+                  <a class="text-primary" href="{{employee.get_absolute_url}}">{{employee.name}}</a>
+
+                </td>
+
+                <td>
+                  <a class="text-primary" href="{{employee.get_edit_url}}">
+                    <i class="material-icons">settings</i>
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-8">
+
+    
+
+    {% if shops %}
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title ">لیست محصولات عرضه شده {{supplier.name}}</h4>
+        <p class="card-category">
+
+        </p>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <thead class=" text-primary">
+              <th>
+                کالا یا خدمات
+              </th>
+
+              <th>
+                واحد فروش
+              </th>
+              <th>
+                قیمت عرضه
+              </th>
+
+
+              <th>
+
+              </th>
+
+
+            </thead>
+            <tbody>
+              {% for shop in shops %}
+              <tr>
+                <td>
+                  <a class="text-primary" href="{{shop.product.get_absolute_url}}">{{shop.product.name}}</a>
+
+                </td>
+
+                <td>
+                  <span class="badge badge-info">
+                    {{shop.unit_name}}</span>
+                </td>
+                <td>
+                  <span class="text-danger">
+                    {{shop.price | to_price}}
+
+                  </span>
+                </td>
+
+
+
+                <td>
+                  {% if remove_shop_form %}
+                  <form action="{% url 'shop:remove_shop' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="shop_id" value="{{shop.id}}">
+                    <button type="submit" class="btn btn-danger">
+                      <i class="material-icons">clear</i>
+                    </button>
+                  </form>
+                  {% endif %}
+
+
+
+                </td>
+              </tr>
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    {% else %}
+    <div class="row">
+      <div class="col-md-2">
+
+      </div>
+      <div class="col-md-8">
+        <div id="app_profile" class="card card-profile">
+          <div class="card-avatar">
+            <a href="javascript:;">
+              <img src="{% static 'logo.svg' %}" class="img">
+            </a></div>
+          <div class="card-body">
+            <h6 class="card-category text-gray text-center"></h6>
+            <h4 class="card-title text-center">{{supplier.name}} محصولی عرضه نکرده است</h4>
+
+
+
+          </div>
+        </div>
+
+
+
+      </div>
+
+      <div class="col-md-2">
+
+      </div>
+    </div>
+
+    {% endif %}
+
+
+  </div>
+
+
+
+
+
+
+
+</div>
+
+
+
+{% endblock %}
+{% block scripts %}
+
+<!-- from View  -->
+<script>
+  var transaction_list_amount = {{ transaction_list_amount| safe}}
+  var transaction_list_labels = {{ transaction_list_labels| safe}}
+  var high_amount = {{ high_amount }}
+  var low_amount = {{ low_amount }}
+</script>
+
+
+
+<script>
+  let initDashboardPageCharts = function () {
+
+    if ($('#websiteViewsChart1').length != 0) {
+
+
+      /* ----------==========     Emails Subscription Chart initialization    ==========---------- */
+
+      var dataWebsiteViewsChart = {
+        labels: transaction_list_labels,
+        series: [
+          transaction_list_amount
+
+        ]
+      };
+      var optionsWebsiteViewsChart = {
+        axisX: {
+          showGrid: true,
+        },
+        low: low_amount,
+        high: high_amount,
+        chartPadding: {
+          top: 0,
+          right: 5,
+          bottom: 0,
+          left: 0
+        }
+      };
+      var responsiveOptions = [
+        ['screen and (max-width: 640px)', {
+          seriesBarDistance: 5,
+          axisX: {
+            labelInterpolationFnc: function (value) {
+              return value[0];
+            }
+          }
+        }]
+      ];
+      var websiteViewsChart = Chartist.Bar('#websiteViewsChart1', dataWebsiteViewsChart, optionsWebsiteViewsChart, responsiveOptions);
+
+      //start animation for the Emails Subscription Chart
+      md.startAnimationForBarChart(websiteViewsChart);
+    }
+  }
+
+  $(document).ready(function () {
+    // Javascript method's body can be found in assets/js/demos.js
+    initDashboardPageCharts();
+
+  });
+</script>
+
+<script>
+  $("#dashboard-profile-link").addClass("active");
+</script>
+{% endblock %}
+{% block styles %}
+{% endblock %}

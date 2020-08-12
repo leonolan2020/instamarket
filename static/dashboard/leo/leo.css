@@ -1,0 +1,136 @@
+@font-face {
+    font-family: "HMFONT";
+    src: url("./ISM.woff2") format("woff2"), url("./ISM.woff") format("woff"), url("./ISM.ttf") format("truetype");
+    font-style: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "HMFONT";
+    src: url("./ISB.woff2") format("woff2"), url("./ISB.woff") format("woff"), url("./ISB.ttf") format("truetype");
+    font-style: normal;
+    font-weight: bold;
+}
+
+.leo-farsi {
+    font-family: "HMFONT" !important;
+    direction: rtl;
+    text-align: right
+}
+
+.leo-font-farsi,
+option,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+input,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+button,
+span,
+label,
+select {
+    font-family: "HMFONT" !important;
+    direction: rtl !important;
+    text-align: right;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    direction: rtl;
+}
+
+.leo-rtl {
+    direction: rtl;
+}
+
+.leo-lltr {
+    direction: ltr;
+}
+
+.leo-center {
+    text-align: center;
+}
+
+.m-a {
+    margin: auto;
+}
+
+.leo-right {
+    text-align: right;
+}
+
+.leo-left {
+    text-align: left;
+}
+
+.nav-link {
+    text-align: right;
+    margin-left: 30px;
+}
+
+.owl-carousel .owl-stage,
+.owl-carousel.owl-drag .owl-item {
+    -ms-touch-action: auto;
+    touch-action: auto;
+}
+
+.row {
+    direction: rtl;
+}
+
+.modal-header .close {
+    margin: -1rem auto -1rem -1rem !important;
+}
+
+
+.form-group {
+    text-align: right;
+}
+
+.modal-header {
+    direction: rtl;
+}
+
+.form-control {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
+
+.breadcrumb {
+    background-color: #fff !important;
+    margin: 0;
+    color: #82ae46;
+}
+
+.breadcrumb-item>a,
+.breadcrumb-item::before {
+    padding-right: 0.5em !important;
+    padding-left: 0 !important;
+}
+
+[aria-label='breadcrumb'] {
+    width: fit-content;
+}
+
+.modal-title {
+    color: white;
+}
+
+nav{
+    direction: rtl !important;
+}

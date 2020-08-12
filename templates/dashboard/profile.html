@@ -1,0 +1,356 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load to_transaction_color %}
+{% block contents %}
+
+
+
+<div class="row">
+  <div class="col-md-4">
+    {% if selected_profile %}
+    <div class="card card-profile" id="profile-app" v-cloak>
+      <div class="card-avatar">
+        <a href="javascript:;">
+          <img class="img" src="{{selected_profile.image}}" />
+
+
+        </a>
+      </div>
+      <div class="card-body">
+        {% if upload_profile_image_form %}
+
+
+        <form enctype="multipart/form-data" action="{% url 'dashboard:edit_profile_image' %}" method="POST">
+          {% csrf_token %}
+
+          <input name="profile_id" value="{{selected_profile.id}}" type="hidden" />
+
+
+
+          <input type="file" accept="image/jpeg" @input="has_image_for_upload=true" required id="image" name="image"
+            class="d-none btn btn-warning">
+
+
+          <label for="image" v-if="!has_image_for_upload" class="btn btn-warning btn-round">
+            <i class="material-icons">face</i>
+            انتخاب تصویر</label>
+
+
+
+          <button class="btn btn-success btn-round" v-show="has_image_for_upload" type="submit">
+
+            <i class="material-icons">backup</i> آپلود تصویر
+          </button>
+
+        </form>
+        {% endif %}
+        <h6 class="card-category text-gray text-center">{{selected_profile.city}}</h6>
+        <h4 class="card-title text-center">{{selected_profile.name}}</h4>
+        {% if selected_profile.bio %}
+
+        <p class="card-description">
+          {{selected_profile.bio}}
+        </p>
+
+        {% endif %}
+
+
+
+
+      </div>
+    </div>
+
+    {% endif %}
+    {% if edit_profile_form %}
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title ">آخرین ورود </h4>
+        <p class="card-category"> لیست آخرین ورود های کاربر به سامانه</p>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <thead class=" text-primary">
+              <th>
+                ID
+              </th>
+              <th>
+                Name
+              </th>
+              <th>
+                Country
+              </th>
+              <th>
+                City
+              </th>
+              <th>
+                Salary
+              </th>
+            </thead>
+            <tbody>
+              {% for i in rangee %}
+
+
+              <tr>
+                <td>
+                  {{i}}
+                </td>
+                <td>
+                  Dakota Rice
+                </td>
+                <td>
+                  Niger
+                </td>
+                <td>
+                  Oud-Turnhout
+                </td>
+                <td class="text-primary">
+                  $36,738
+                </td>
+              </tr> {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    {% endif %}
+
+
+  </div>
+  <div class="col-md-8">
+
+    {% if edit_profile_form %}
+
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">ویرایش پروفایل کاربری</h4>
+        <p class="card-category">اطلاعات پروفایل کاربری خود را در فرم زیر ثبت و تایید کنید.</p>
+      </div>
+      <div class="card-body">
+        <form action="{% url 'dashboard:edit_profile' %}" method="POST">
+          <input type="hidden" name="profile_id" value="{{selected_profile.id}}">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-5">
+              <div class="form-group">
+                <label class="bmd-label-floating">نام کاربری</label>
+                <input type="text" class="form-control" value="{{selected_profile.user.username}}" disabled>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="bmd-label-floating">نام کاربری</label>
+                <input type="text" class="form-control" value="{{selected_profile.user.username}}" disabled>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="bmd-label-floating">ایمیل</label>
+                <input type="email" class="form-control" value="{{selected_profile.user.email}}" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="bmd-label-floating">نام</label>
+                <input name="first_name" type="text" class="form-control" value="{{selected_profile.first_name}}">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="bmd-label-floating">نام خانوادگی</label>
+                <input name="last_name" type="text" class="form-control" value="{{selected_profile.last_name}}">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="bmd-label-floating">آدرس</label>
+                <input name="address" type="text" class="form-control" value="{{selected_profile.address}}">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="bmd-label-floating">شهر</label>
+                <select name="region_id" class="form-control">
+                  <option disabled>شهر را انتخاب کنید</option>
+                  <option value="{{selected_profile.region_id}}" selected>{{selected_profile.region.name}}</option>
+                  {% for region in regions %}
+
+
+                  <option value="{{region.id}}">{{region.name}}</option>
+                  {% endfor %}
+                </select>
+
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="bmd-label-floating">موبایل</label>
+                <input name="mobile" type="text" class="form-control" value="{{selected_profile.mobile}}">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="bmd-label-floating">Postal Code</label>
+                <input type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>درباره</label>
+                <div class="form-group">
+                  <input name="bio" class="form-control" type="text" value="{{selected_profile.bio}}">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary pull-right">تایید و اصلاح پروفایل</button>
+          <div class="clearfix"></div>
+        </form>
+
+      </div>
+    </div>
+    {% endif %}
+
+
+
+
+    {% if transactions %}
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title ">مانده حساب : {{rest | to_price}}</h4>
+        <p class="card-category"> بیست تراکنش آخر       
+          &nbsp;&nbsp;&nbsp;
+          <a href="{% url 'dashboard:transactions' profile_id=selected_profile.id %}">
+            لیست کامل
+          </a>
+        </p>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <thead class=" text-primary">
+              <th>
+                عنوان
+              </th>
+              <th>
+                بستانکار
+              </th>
+              <th>
+                بدهکار
+              </th>
+              <th>
+                مبلغ
+              </th>
+              <th>
+                تاریخ
+              </th>
+            </thead>
+            <tbody>
+              {% for transaction in transactions %}
+              <tr>
+                <td>
+                  {{transaction.title}}
+                </td>
+                <td>
+                  <a href="{{transaction.from_profile.get_absolute_url}}">
+                    {{transaction.from_profile.name}}
+                  </a>
+                </td>
+                <td>
+                  <a href="{{transaction.to_profile.get_absolute_url}}">
+                    {{transaction.to_profile.name}}
+                  </a>
+
+                </td>
+                <td class="{{transaction.direction | to_transaction_color }}">
+                  {{transaction.amount | to_price}}
+                </td>
+                <td>
+                  {{transaction.date_added | to_persian_date}}
+                </td>
+              </tr>
+
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
+
+
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'dashboard/leo/vue.js' %}" type="text/javascript"></script>
+<script>
+  $("#dashboard-profile-link").addClass("active");
+</script>
+
+ {% if selected_profile %}
+
+
+
+<script>
+  let profile_app = new Vue({
+    el: "#profile-app",
+    data: {
+      has_image_for_upload: false,
+
+    }
+  })
+</script>
+{% endif %}
+{% endblock %}
+{% block styles %}
+<style>
+  .custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+  }
+
+  .custom-file-input::before {
+    content: 'ddddddddddddddddddddd';
+    color: black;
+    display: inline-block;
+    background: -webkit-linear-gradient(top, #f9f9f9, #e3e3e3);
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px 8px;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    cursor: pointer;
+    text-shadow: 1px 1px #fff;
+    font-weight: 700;
+    font-size: 10pt;
+  }
+
+  .custom-file-input:hover::before {
+    border-color: black;
+  }
+
+  .custom-file-input:active {
+    outline: 0;
+  }
+
+  .custom-file-input:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+  }
+</style>
+{% endblock %}

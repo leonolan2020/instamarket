@@ -1,0 +1,274 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+{% block contents %}
+
+
+
+
+
+<div class="row">
+  {% if active_customer %}
+  <div class="col-md-4">
+    <div class="card card-stats">
+      <div class="card-header card-header-warning card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">content_copy</i></div>
+        <p class="card-category">&nbsp;</p>
+        <h3 class="card-title">لینک های شما
+
+        </h3>
+      </div>
+
+      <div class="card-body">
+        <a class="btn btn-primary btn-block btn-link text-right" href="{{active_customer.get_orders_url}}"><i class="material-icons">settings</i>
+
+          <span class="px-2">
+            سفارشات شما</span></a>
+        <a class="btn btn-primary btn-block btn-link text-right" href="{{active_customer.get_absolute_url}}"><i class="material-icons">settings</i>
+
+          <span class="px-2">
+            پروفایل شما</span></a>
+        <a class="btn btn-primary btn-block btn-link text-right" href="{{active_customer.get_transactions_url}}"><i class="material-icons">settings</i>
+
+          <span class="px-2">
+            تراکنش های شما</span></a>
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">access_time</i> ۴ دقیقه پیش
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
+
+
+  <div class="col-md-4">
+    <div class="card card-chart">
+      <div class="card-header card-header-success">
+        <div class="ct-chart" id="dailySalesChart2">
+
+
+
+        </div>
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">تراکنش های شما</h4>
+        <p class="card-category">
+          <span class="text-success">
+            <i class="fa fa-long-arrow-up"></i> 55% </span> رشد در فروش امروز.</p>
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">access_time</i> ۴ دقیقه پیش
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card card-chart">
+      <div class="card-header card-header-danger">
+        <div class="ct-chart" id="completedTasksChart2"></div>
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">وضعیت مالی</h4>
+
+
+
+
+        <p class="card-category"> مانده حساب :
+          {% if total > 0 %}
+          <span class="text-success">
+            {{total|to_price}}
+          </span>
+          {%else%}
+          <span class="text-danger">
+            {{total|to_price}}
+          </span>
+          {%endif%}
+
+
+
+        </p>
+      </div>
+
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">access_time</i> کمپین دو روز پیش ارسال شد
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card card-chart">
+      <div class="card-header card-header-warning">
+        <div class="ct-chart" id="websiteViewsChart2">
+
+
+
+
+
+        </div>
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">دنبال کننده‌های ایمیلی</h4>
+        <p class="card-category">کارایی آخرین کمپین</p>
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">access_time</i> کمپین دو روز پیش ارسال شد
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  {% if empty_search %}
+  {% include "dashboard/partials/empty_search.html" %}
+
+  {% endif %}
+
+
+
+
+
+  {% endblock %}
+  {% block scripts %}
+  <!-- from View  -->
+  <script>
+    var transaction_list_amount = {{ transaction_list_amount| safe}}
+    var transaction_list_rest = {{ transaction_list_rest| safe}}
+    var transaction_list_labels = {{ transaction_list_labels| safe}}
+    var high_amount = {{ high_amount }}
+    var low_rest = {{ low_rest }}
+    var high_rest = {{ high_rest }}
+    var low_amount = {{ low_amount }}
+  </script>
+
+
+
+  <script>
+    let initDashboardPageCharts = function () {
+
+      if ($('#dailySalesChart2').length != 0 || $('#completedTasksChart2').length != 0 || $('#websiteViewsChart2').length != 0) {
+        /* ----------==========     Daily Sales Chart initialization    ==========---------- */
+
+        dataDailySalesChart = {
+          labels: transaction_list_labels,
+          series: [
+            transaction_list_amount
+          ]
+        };
+
+        optionsDailySalesChart = {
+          lineSmooth: Chartist.Interpolation.cardinal({
+            tension: 1
+          }),
+          low: low_amount,
+          high: high_amount, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+          chartPadding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+          },
+        }
+
+        var dailySalesChart = new Chartist.Line('#dailySalesChart2', dataDailySalesChart, optionsDailySalesChart);
+
+        md.startAnimationForLineChart(dailySalesChart);
+
+
+
+        /* ----------==========     Completed Tasks Chart initialization    ==========---------- */
+
+        dataCompletedTasksChart = {
+
+          labels: transaction_list_labels,
+          series: [
+            transaction_list_rest,
+          ]
+        };
+
+        optionsCompletedTasksChart = {
+          lineSmooth: Chartist.Interpolation.cardinal({
+            tension: 0.5
+          }),
+          low: low_rest,
+          high: high_rest, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+          chartPadding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+          }
+        }
+
+        var completedTasksChart = new Chartist.Line('#completedTasksChart2', dataCompletedTasksChart, optionsCompletedTasksChart);
+
+        // start animation for the Completed Tasks Chart - Line Chart
+        md.startAnimationForLineChart(completedTasksChart);
+
+
+        /* ----------==========     Emails Subscription Chart initialization    ==========---------- */
+
+        var dataWebsiteViewsChart = {
+          labels: transaction_list_labels,
+          series: [
+            transaction_list_amount
+
+          ]
+        };
+        var optionsWebsiteViewsChart = {
+          axisX: {
+            showGrid: true,
+          },
+          low: low_amount,
+          high: high_amount,
+          chartPadding: {
+            top: 0,
+            right: 5,
+            bottom: 0,
+            left: 0
+          }
+        };
+        var responsiveOptions = [
+          ['screen and (max-width: 640px)', {
+            seriesBarDistance: 5,
+            axisX: {
+              labelInterpolationFnc: function (value) {
+                return value[0];
+              }
+            }
+          }]
+        ];
+        var websiteViewsChart = Chartist.Bar('#websiteViewsChart2', dataWebsiteViewsChart, optionsWebsiteViewsChart, responsiveOptions);
+
+        //start animation for the Emails Subscription Chart
+        md.startAnimationForBarChart(websiteViewsChart);
+      }
+    }
+
+    $(document).ready(function () {
+      // Javascript method's body can be found in assets/js/demos.js
+      initDashboardPageCharts();
+
+    });
+  </script>
+  <script>
+    $("#home-link").addClass("active");
+
+
+
+
+
+  </script>
+  {% endblock %}
+  {% block styles %}
+
+  {% endblock %}

@@ -1,0 +1,48 @@
+<div>
+    <form @submit.prevent="addToCart" action="{% url 'shop:add_to_cart' %}" method="POST">
+
+        <button type="submit" class="btn btn-block btn-danger">
+            <div class="media">
+     <div v-if="waiting" class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                <div v-if="!waiting"> 
+               
+
+                    <i class="material-icons my-auto leo-basket">settings</i></div>
+
+
+                <div class="media-body ml-3">
+                    <h5 class="mt-0">
+                        <small>
+                            {% verbatim %}
+
+                            هر
+                            {{shop.unit_name}}
+                            {{separate(shop.price)}}
+
+                            {% endverbatim %}
+                        </small>
+                    </h5>
+                    <p class="mb-0">
+
+                        {% verbatim %}
+
+
+                        <small>از
+                            {{shop.supplier.name}} بخرید
+                        </small>
+
+                        {% endverbatim %}
+
+                    </p>
+                </div>
+            </div>
+
+        </button>
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{product.id}}">
+        <input type="hidden" name="shop_id" value="shop.id">
+
+    </form>
+</div>

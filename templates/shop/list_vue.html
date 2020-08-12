@@ -1,0 +1,401 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% block contents %}
+
+
+
+<div class="row" id="shop-app" v-cloak>
+
+  <div class="col-md-12 mb-2">
+
+
+    <div v-html="breadcrumb"> </div>
+
+  </div>
+
+  <div class="col-md-3" v-if="can_add_category">
+    <div v-if="can_add_category" class="card card-stats">
+      <div class="card-header card-header-warning card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">content_copy</i>
+        </div>
+        <p class="card-category">{{parent.name}}</p>
+        <h3 class="card-title">دسته جدید
+        </h3>
+      </div>
+      <div class="card-body">
+        <form @submit.prevent="addCategory">
+          {% csrf_token %}
+          <input type="hidden" :value="parent.id" name="parent_id">
+          <input type="text" v-model="category_name_input" id="category_name_input" placeholder="دسته جدید" required
+            maxlength="50" class="form-control" name="name">
+          <button type="submit" class="btn btn-primary">افزودن</button>
+        </form>
+
+
+
+
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">local_offer</i>
+          {% verbatim %}
+
+          {{categories.length}} دسته بندی
+          {% endverbatim %}
+
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <div class="col-md-3" v-if="can_add_product">
+
+
+    <div v-if="can_add_product" class="card card-stats">
+      <div class="card-header card-header-danger card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">info_outline</i>
+        </div>
+        <p class="card-category">{{parent.name}}</p>
+        <h3 class="card-title">کالای جدید</h3>
+      </div>
+      <div class="card-body">
+
+        <form @submit.prevent="addProduct">
+          {% csrf_token %}
+          <input type="hidden" :value="parent.id" name="category_id">
+          <input type="text" v-model="product_name_input" id="product_name_input" placeholder="کالای جدید" required
+            maxlength="50" class="form-control" name="name">
+          <button type="submit" class="btn btn-primary">افزودن</button>
+        </form>
+
+
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">local_offer</i>
+          {% verbatim %}
+          {{products.length}} کالا
+
+          {% endverbatim %}
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+
+
+  
+  <div class="col-md-12">
+
+
+
+
+
+    {% if categories %}
+
+
+    <div class="card" v-if="categories.length>0">
+      {% verbatim %}
+
+
+      <div class="card-header card-header-primary">
+        <h4 class="card-title ">{{parent.name}}</h4>
+
+        <p class="card-category"> برای ویرایش
+          <a href="#">اینجا</a>
+
+          را کلیک کنید
+        </p>
+      </div>
+
+      {% endverbatim %}
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <thead class=" text-primary">
+              <th>
+                ID
+              </th>
+              <th>
+                نام
+              </th>
+
+              <th>
+                &nbsp;
+              </th>
+            </thead>
+            <tbody>
+
+              {% verbatim %}
+              <tr v-for="category in categories ">
+                <td>
+                  {{category.id}}
+                </td>
+                <td>
+
+                  <a class="text-primary" @click="gotoShop(category.id)" href="#">
+                    <i class="material-icons">{{category.icon}}</i>&nbsp;&nbsp;&nbsp;
+                    {{category.name}}</a>
+
+                </td>
+
+                <td>
+                  <a class="btn btn-info" v-if="can_edit_category" :href="category.get_edit_url"> ویرایش</a>
+                </td>
+              </tr>
+              {% endverbatim %}
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div> {% endif %}
+
+    {% if products %}
+
+    <div class="row">
+     
+      <div v-for="product in products" class="col-md-4">
+
+        {% verbatim %}
+        <div class="card card-profile">
+          <div v-if="product.image!=null" class="card-avatar">
+            <a href="javascript:;">
+              <img :src="product.image" width="75px" style="border-radius: 75px;" 
+              alt="">
+    
+            </a>
+          </div>
+          <div class="card-header card-header-danger card-header-icon">
+            <div class="card-icon" v-if="product.image==null">
+              <i class="material-icons">info_outline</i>
+            </div>
+           
+
+          <a :href="product.get_absolute_url">
+            <h3 class="card-title text-primary text-center"  >
+              {{product.name}}
+              </h3></a>
+          </div>
+          <div class="card-body">
+
+
+            <p class="card-category">{{product.name}}</p>
+            <p>
+              <a :href="product.get_absolute_url">جزئیات</a>
+              &nbsp;&nbsp;|&nbsp;&nbsp;
+              <a :href="product.get_edit_url">ویرایش</a>
+            </p>
+
+
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">local_offer</i>
+
+              {{product.name}}
+
+
+            </div>
+          </div>
+        </div>
+        {% endverbatim %}
+
+      </div>
+    
+
+
+    </div>
+
+    {% endif %}
+  </div>
+</div>
+
+
+
+{% endblock %}
+{% block scripts %}
+<script>
+  $(" #dashboard-shop-link").addClass("active");
+  var shop_app_data = {
+    categories: {{ categories| safe}},
+  products:{{ products | safe }},
+  parent: {{ parent | safe }},
+  SITE_URL: "{{ SITE_URL }}",
+    breadcrumb: '',
+      can_add_category: {{ can_add_category }},
+  can_add_product: false,
+    can_edit_category: {{ can_edit_category }},
+  can_edit_product: false,
+    category_name_input: '',
+      product_name_input: '',
+        waiting: false,
+  }
+
+
+
+
+
+
+
+  let shop_app = new Vue({
+    el: "#shop-app",
+    data: shop_app_data,
+    methods: {
+      setVisibility: function () {
+        // console.log(this.categories.length)
+        // console.log(this.can_add_category)
+        // console.log(this.products.length)
+        // console.log(this.can_add_product)
+        if (this.products.length > 0) this.can_add_category = false
+        if (this.categories.length > 0) this.can_add_product = false
+      },
+      gotoShop: function (parent_id) {
+        this.waiting = true
+        get_shop_api(parent_id)
+
+
+      },
+      addCategory: function () {
+        this.waiting = true
+        postAddCategory()
+
+      },
+      addProduct: function () {
+        this.waiting = true
+        postAddProduct()
+
+      }
+    }
+  })
+
+
+
+
+  function get_shop_api(parent_id) {
+    let url = shop_app.SITE_URL + 'api/shop/' + parent_id + '/'
+    // Send the data using post
+    // var getting = $.get(url);
+    var getting = $.get(url);
+    // Put the results in a div
+    getting.done(function (data) {
+      // word_app.word = (data.word);
+      // word_app.definitions = (data.definitions);
+
+      shop_app.waiting = false
+      shop_app.categories = data.categories
+      shop_app.products = data.products
+      shop_app.parent = data.parent
+      shop_app.breadcrumb = data.breadcrumb
+      shop_app.can_add_product = data.can_add_product === '1'
+      shop_app.can_add_category = data.can_add_category === '1'
+      shop_app.can_edit_product = data.can_edit_product === '1'
+      shop_app.can_edit_category = data.can_edit_category === '1'
+
+
+      shop_app.setVisibility()
+      // console.log(word_app.definitions); 
+
+    })
+  }
+
+  let csrfmiddlewaretoken = ''
+  $(document).ready(function () {
+    // Javascript method's body can be found in assets/js/demos.js
+    csrfmiddlewaretoken = $("input[name='csrfmiddlewaretoken']").val()
+
+
+  });
+
+
+
+
+  function postAddProduct() {
+    //console.log('postAddProduct')
+    let product_name = shop_app.product_name_input
+    let url = '{% url "shop:api_add_product" %}'
+    // Send the data using post
+    // var getting = $.get(url);
+    let category_id = shop_app.parent.id
+    var posting = $.post(url, {
+      name: product_name,
+      category_id: category_id,
+      csrfmiddlewaretoken: csrfmiddlewaretoken
+    })
+
+    // Put the results in a div
+    posting.done(function (data) {
+      shop_app.waiting = false
+      // word_app.word = (data.word);
+      // word_app.definitions = (data.definitions);
+      shop_app.products = data.products
+
+      if (data.done === 'SUCCEED') {
+        shop_app.setVisibility()
+        showNotification('bottom', 'center', 'redeem', 'success', shop_app.product_name_input + ' با موفقیت اضافه شد')
+        shop_app.product_name_input = ''
+      }
+    })
+  }
+
+
+
+
+  function postAddCategory() {
+    //console.log('postAddCategory')
+    let category_name = shop_app.category_name_input
+    let url = '{% url "shop:api_add_category" %}'
+    // Send the data using post
+    // var getting = $.get(url);
+    let parent_id = shop_app.parent.id
+    var posting = $.post(url, {
+      name: category_name,
+      parent_id: parent_id,
+      csrfmiddlewaretoken: csrfmiddlewaretoken
+    })
+
+    // Put the results in a div
+    posting.done(function (data) {
+      shop_app.waiting = false
+      // word_app.word = (data.word);
+      // word_app.definitions = (data.definitions);
+      shop_app.categories = data.categories
+
+      if (data.done === 'SUCCEED') {
+        shop_app.setVisibility()
+        showNotification('bottom', 'center', 'category', 'warning', shop_app.category_name_input + ' با موفقیت اضافه شد')
+        shop_app.category_name_input = ''
+      }
+    })
+  }
+
+
+
+</script>
+<!-- <script src="{% static 'hyper/shop.js1' %}""></script> -->
+
+{% endblock %}
+{% block styles %}
+<style>
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity .5s;
+  }
+
+  .fade-enter,
+  .fade-leave-to
+
+  /* .fade-leave-active below version 2.1.8 */
+    {
+    opacity: 0;
+  }
+</style>
+{% endblock %}

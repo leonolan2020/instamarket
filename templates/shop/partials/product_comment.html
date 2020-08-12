@@ -1,0 +1,33 @@
+{% load static %}
+{% verbatim %}
+<div class="media mb-2 pb-2 border-bottom new-comment-style">
+    <img class="mr-3 rounded-circle" width="48px" :src="comment.image" alt="Generic placeholder image">
+    <div class="media-body">
+      <h5 class="mt-0 mb-0">{{comment.name}} <span
+          class="mx-2 text-secondary"><small><small>{{comment.persian_time_added}}</small></small></span>
+        
+          
+         
+          <!-- <button v-if="comment.profile_id==current_profile_id && confirm_delete_comment"
+          @click="CancelDeleteComment" class="btn btn-sm btn-secondary">بازگشت</button> -->
+
+          <button v-if="comment.profile_id==current_profile_id && confirm_delete_comment"
+          @click="ConfirmDeleteComment(comment.id)" 
+          class="btn btn-sm btn-danger">مطمئنم ، حذف کن</button>
+         
+          <button  v-if="comment.profile_id==current_profile_id && confirm_delete_comment"
+          @click="CancelDeleteComment" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true" class="text-secondary">&times;</span>
+          </button>
+
+
+           <button  v-if="comment.profile_id==current_profile_id && !confirm_delete_comment" @click="ShowConfirmDeleteComment" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true" class="text-danger">&times;</span>
+          </button>
+      </h5>
+      <small>
+        {{comment.comment}}
+      </small>
+    </div>
+  </div>
+{% endverbatim %}
