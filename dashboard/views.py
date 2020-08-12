@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import View
+from .repo import MainSliderRepo
 def getContext(request,*args, **kwargs):
     context={}
     context['title']="Insta-Market"
@@ -9,6 +10,7 @@ def getContext(request,*args, **kwargs):
 class IndexView(View):
     def home(self, request, *args, **kwargs):
         context=getContext(request=request)
+        context['main_sliders']=MainSliderRepo().list()
         return render(request,'index.html',context)
     def get(self, request, *args, **kwargs):
         return HttpResponse('GET request!')

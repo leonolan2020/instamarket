@@ -28,6 +28,17 @@
                     <p class="py-3 text-center">
                         {{message}}</p>
                 </div>
+                {% for main_slider in main_sliders %}
+
+                <div class="card">
+                    <p class=" py-3 text-center">
+                        {{main_slider.title}}
+                    </p>
+                </div>
+                {% endfor %}
+
+
+
             </div>
             <div class="col-md-4">
             </div>
