@@ -118,11 +118,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = "/static/"
+STATIC_URL = dashboard.STATIC_URL
+MEDIA_URL = dashboard.MEDIA_URL
+STATIC_ROOT = dashboard.STATIC_ROOT
+MEDIA_ROOT= dashboard.MEDIA_ROOT
 
 django_heroku.settings(locals())
 
-
-
-STATICFILES_DIRS=dashboard.STATICFILES_DIRS
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
