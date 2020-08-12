@@ -233,22 +233,27 @@
 
         <script src="{% static 'pusher/pusher.min.js'%}"></script>
         <script>
-            notifications = {{ notifications_s | safe }}
-            notifications_count = {{ notifications_count | safe }}
+            // notifications = {{ notifications_s | safe }}
+            // notifications_count = {{ notifications_count | safe }}
 
 
-            // Vue application
-            const app_notifications = new Vue({
-                el: '#app-notifications',
-                data: {
-                    notifications: notifications,
-                    notifications_count: notifications_count
-                },
-            });
+            // // Vue application
+            // const app_notifications = new Vue({
+            //     el: '#app-notifications',
+            //     data: {
+            //         notifications: notifications,
+            //         notifications_count: notifications_count
+            //     },
+            // });
 
+        </script>
+         <script>
+            var DEBUG={{DEBUG}}
+            
         </script>
         {% if DEBUG %}
           <script>
+           
               var logToConsole=true
           </script>
         {% else %}

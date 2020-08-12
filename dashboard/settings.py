@@ -1,9 +1,12 @@
 from pathlib import Path
 import os
 import sys
+DEBUG=True
 ON_SERVER=True
+SERVER_DEBUG=True
 if '--no-color' in sys.argv:
     ON_SERVER=False
+    DEBUG=SERVER_DEBUG
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 

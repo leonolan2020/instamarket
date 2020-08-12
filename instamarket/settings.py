@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 from dashboard import settings as dashboard
 import django_heroku
-import environ
+# import environ
 from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,14 +27,14 @@ SECRET_KEY = '&_u8x!0mhli^dt7mgr5pi7b+1@#m9=pw9wslp$-u*^&p%uh)=='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-# ALLOWED_HOSTS = ['https://leodashboard2.herokuapp.com/','leodashboard2.herokuapp.com','herokuapp.com','www.herokuapp.com']
+ALLOWED_HOSTS = ['https://leodashboard2.herokuapp.com/','leodashboard2.herokuapp.com','herokuapp.com','www.herokuapp.com']
 
 
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+# env = environ.Env(
+#     # set casting, default value
+#     DEBUG=(bool, False)
+# )
+# ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 # Application definition
 
 INSTALLED_APPS = [
@@ -135,3 +135,4 @@ MEDIA_ROOT= dashboard.MEDIA_ROOT
 django_heroku.settings(locals())
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+DEBUG=dashboard.DEBUG

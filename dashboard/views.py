@@ -2,12 +2,13 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import View
 from .repo import MainSliderRepo
-
+from instamarket.settings import DEBUG
 
 TEMPALTE_ROOT='dashboard/'
 
 def getContext(request,*args, **kwargs):
     context={}
+    context['DEBUG']=DEBUG
     context['title']="Insta-Market"
     context['message']="Hello! Welcome to my home page !!"
     return context
