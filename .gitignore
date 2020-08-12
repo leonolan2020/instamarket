@@ -7,7 +7,7 @@ venv
 staticfiles/
 # C extensions
 *.so
-
+*.sqlite3
 # Distribution / packaging
 .Python
 build/

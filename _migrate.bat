@@ -1,2 +1,2 @@
-python manage.py makemigrations
+python manage.py makemigrations --no-color
 python manage.py migrate --no-color
